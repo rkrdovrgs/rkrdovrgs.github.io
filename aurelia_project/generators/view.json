@@ -1,4 +1,0 @@
-{
-  "name": "view",
-  "description": "Creates a view model class, template and less, placing them in the project specified path."
-}

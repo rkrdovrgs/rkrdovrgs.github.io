@@ -253,5 +253,5 @@ paket-files/
 .vscode/
 src/main.js
 src/environment.ts
-scripts/
-content/fonts/
+#scripts/
+#content/fonts/
