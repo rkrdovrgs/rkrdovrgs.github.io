@@ -1,7 +1,8 @@
 <template>
     <require from="activity-viewer/activity-viewer.css"></require>
     <label>Lesson ${lesson.week}.${lesson.day} - <small>${activity.name}</small></label>
-
+    <br>
+    <button class="btn btn-primary" if.bind="activity.type === 'blink' && tries < activity.tries && answers.length === 0" click.trigger="blinkAnswer()">Hint</button>
     <ul>
         <li class="row" repeat.for="answer of answers">
             <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>

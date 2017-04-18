@@ -12,7 +12,9 @@ interface IActivity {
     key: string;
     number: number;
     name: string;
-    showAllAnswers: boolean;
+    type: string;
+    speedRatio: number;
+    tries: number;
     hideCode: boolean;
     hideComments: boolean;
     url: string;

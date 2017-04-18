@@ -11,6 +11,8 @@ export class ActivityViewer {
     activity: IActivity;
     answers: IAnswer[] = [];
     storage = environment.debug ? sessionStorage : localStorage;
+    tries: number = 0;
+    currentAnswerIndex: number = 0;
 
 
     constructor(private lessonService: LessonsService, private router: Router) { }
@@ -19,14 +21,23 @@ export class ActivityViewer {
         this.lessonService.getLessonOnce(params.lessonKey, lesson => {
             this.lesson = lesson;
             this.activity = lesson.activities[params.activityKey];
-            if (this.activity.showAllAnswers) {
-                var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
-                this.answers = randomSort.map(r => {
-                    var answerKey = Object.keys(this.activity.answers)[r];
-                    return this.activity.answers[answerKey];
-                });
-            } else {
-                this.showOneAnswer(params.lessonKey, params.activityKey);
+            switch (this.activity.type) {
+                case "one-answer":
+                    this.showOneAnswer(params.lessonKey, params.activityKey);
+                    break;
+                case "all-answers":
+                    var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
+                    this.answers = randomSort.map(r => {
+                        var answerKey = Object.keys(this.activity.answers)[r];
+                        return this.activity.answers[answerKey];
+                    });
+                case "blink":
+                    let triesKey = `answer-tries${params.lessonKey}${params.activityKey}`;
+                    this.tries = parseInt(this.storage.getItem(triesKey)) || 0;
+                    this.tries++;
+                    this.storage.setItem(triesKey, this.tries.toString());
+
+                    break;
             }
             this.highlight();
         });
@@ -38,6 +49,20 @@ export class ActivityViewer {
                 hljs.highlightBlock(block);
             });
         }, 100);
+    }
+
+    blinkAnswer() {
+        if (this.currentAnswerIndex === Object.keys(this.activity.answers).length) {
+            this.answers = [<IAnswer>{ html: '<pre><code>//No more hints</code></pre>' }];
+        } else {
+            let answerKey = Object.keys(this.activity.answers)[this.currentAnswerIndex];
+            this.answers = [this.activity.answers[answerKey]];
+            this.highlight();
+            this.currentAnswerIndex++;
+            setTimeout(() => {
+                this.answers = [];
+            }, (this.activity.answers[answerKey].html.length * this.activity.speedRatio) + 100);
+        }
     }
 
     showOneAnswer(lessonKey: string, activityKey: string) {

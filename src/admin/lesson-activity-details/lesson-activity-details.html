@@ -16,15 +16,32 @@
             <input type="text" class="form-control" placeholder="Name" value.bind="activity.name">
         </div>
         <div class="form-group">
-            <label>Show all answers?</label>
-            <input type="checkbox" checked.bind="activity.showAllAnswers">
-        </div>
-        <div class="form-group">
             <label>Hide comments?</label>
             <input type="checkbox" checked.bind="activity.hideComments">
             <label>Hide code?</label>
             <input type="checkbox" checked.bind="activity.hideCode">
         </div>
+        <div class="form-group">
+            <label>One answer</label>
+            <input type="radio" name="activity-type" value="one-answer" checked.bind="activity.type">
+
+            <label>All answers</label>
+            <input type="radio" name="activity-type" value="all-answers" checked.bind="activity.type">
+
+            <label>Blink</label>
+            <input type="radio" name="activity-type" value="blink" checked.bind="activity.type">
+        </div>
+        <div class="form-group row" if.bind="activity.type === 'blink'">
+            <div class="col-xs-6">
+                <label>Speed ratio</label>
+                <input type="number" class="form-control" placeholder="Speed ratio" value.bind="activity.speedRatio">
+            </div>
+            <div class="col-xs-6">
+                <label>Tries</label>
+                <input type="number" class="form-control" placeholder="Tries" value.bind="activity.tries">
+            </div>
+        </div>
+
         <div if.bind="!!activity.key">
             <hr>
             <h2>Answers</h2>

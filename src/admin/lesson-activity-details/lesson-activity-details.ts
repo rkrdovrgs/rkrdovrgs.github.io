@@ -43,7 +43,9 @@ export class LessonActivityDetails {
     }
 
     saveActivity() {
-        this.activity.showAllAnswers = this.activity.showAllAnswers || false;
+        this.activity.type = this.activity.type || "one-answer";
+        this.activity.speedRatio = this.activity.speedRatio || 25;
+        this.activity.tries = this.activity.tries || 3;
         this.activity.hideComments = this.activity.hideComments || false;
         this.activity.hideCode = this.activity.hideCode || false;
         this.answers.forEach(answer => {
