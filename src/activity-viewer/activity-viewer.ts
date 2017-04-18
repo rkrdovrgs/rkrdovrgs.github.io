@@ -53,7 +53,7 @@ export class ActivityViewer {
 
     blinkAnswer() {
         if (this.currentAnswerIndex === Object.keys(this.activity.answers).length) {
-            this.answers = [<IAnswer>{ html: '<pre><code>//No more hints</code></pre>' }];
+            this.answers = [<IAnswer>{ html: '<pre><code>//Ran out of hints</code></pre>' }];
         } else {
             let answerKey = Object.keys(this.activity.answers)[this.currentAnswerIndex];
             this.answers = [this.activity.answers[answerKey]];
