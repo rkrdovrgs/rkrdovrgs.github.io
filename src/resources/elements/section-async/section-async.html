@@ -1,7 +1,0 @@
-<template>
-    <require from="resources/elements/section-async/section-async.css"></require>
-    <i if.bind="serviceRef.pendingRequests.length > 0" class="fa fa-circle-o-notch fa-spin section-async-spinner"></i>
-    <section show.bind="serviceRef.pendingRequests.length === 0" class="${class}">
-        <slot></slot>
-    </section>
-</template>
