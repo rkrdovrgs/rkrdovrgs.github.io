@@ -10,9 +10,9 @@ export class RouteConfiguration {
     }
 
     configure(config): void {
-        config.options.pushState = true;
+        /*config.options.pushState = true;
         config.options.hashChange = false;
-        config.options.root = '/';
+        config.options.root = '/';*/
 
         config.map(this.getRoutes());
     }
