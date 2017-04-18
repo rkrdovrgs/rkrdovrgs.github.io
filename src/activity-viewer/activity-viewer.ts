@@ -73,7 +73,7 @@ export class ActivityViewer {
         var uniqueArr = []
         while (uniqueArr.length < length) {
             var randomNumber = this.getRandom(0, length);
-            //if (randomNumber === uniqueArr.length) continue;
+            if (uniqueArr.length !== length - 1 && randomNumber === uniqueArr.length) continue;
             if (uniqueArr.indexOf(randomNumber) > -1) continue;
             uniqueArr[uniqueArr.length] = randomNumber;
         }
