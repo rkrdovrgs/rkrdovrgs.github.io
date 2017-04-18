@@ -1,6 +1,6 @@
 <template>
     <require from="admin/lesson-details/lesson-details.css"></require>
-    <a href="admin/lessons" class="btn btn-default">Lessons</a>
+    <a href="#/admin/lessons" class="btn btn-default">Lessons</a>
     <hr>
     <h1>Lesson Details</h1>
     <button type="submit" click.trigger="saveLesson()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
@@ -17,7 +17,7 @@
         <div if.bind="!!lesson.key">
             <hr>
             <h2>Activities</h2>
-            <a href="admin/lessons/${lesson.key}/activities/add" class="btn btn-primary"><i class="fa fa-plus"></i> Add activity</a>
+            <a href="#/admin/lessons/${lesson.key}/activities/add" class="btn btn-primary"><i class="fa fa-plus"></i> Add activity</a>
             <hr if.bind="activities.length">
             <ul>
                 <li repeat.for="activity of activities">
