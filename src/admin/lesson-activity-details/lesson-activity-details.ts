@@ -1,6 +1,7 @@
 import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
+import * as $ from "jquery";
 
 @inject(LessonsService, Router)
 export class LessonActivityDetails {
@@ -19,6 +20,11 @@ export class LessonActivityDetails {
                 this.activity = lesson.activities[params.activityKey];
                 if (!!this.activity && !!this.activity.answers) {
                     this.answers = Object.keys(this.activity.answers).map(answerKey => this.activity.answers[answerKey]);
+                    setTimeout(() => {
+                        $('pre code').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
+                    }, 100);
                 }
             }
         });

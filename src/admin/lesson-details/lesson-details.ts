@@ -7,11 +7,15 @@ export class LessonDetails {
     lesson: ILesson;
     activities: IActivity[];
     detachLesson: IDetachListener;
+    lessonsUrl: string;
+    addActivityUrl: string;
 
     constructor(private lessonService: LessonsService, private router: Router) { }
 
     activate(params: { key: string }) {
+        this.lessonsUrl = this.router.generate("lessons");
         if (!!params.key) {
+            this.addActivityUrl = this.router.generate("lesson-activity-details", { lessonKey: params.key, activityKey: "add" });
             this.detachLesson = this.lessonService.getLesson(params.key, lesson => {
                 this.lesson = lesson;
                 if (!!lesson.activities) {

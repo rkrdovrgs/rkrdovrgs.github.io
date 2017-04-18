@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/gulp": "^3.8.32",
+    "@types/highlight.js": "^9.1.9",
     "@types/showdown": "^1.4.32",
     "aurelia-animator-css": "^1.0.0",
     "aurelia-auth": "^3.0.2",

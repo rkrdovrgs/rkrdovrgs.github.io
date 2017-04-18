@@ -2,6 +2,7 @@ import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
 import * as _ from "lodash";
+import * as $ from "jquery";
 
 @inject(LessonsService, Router)
 export class ActivityViewer {
@@ -49,6 +50,12 @@ export class ActivityViewer {
                     let answer = this.activity.answers[answerKey];
                     this.answers = [answer];
                 }
+
+                setTimeout(() => {
+                    $('pre code').each(function (i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                }, 100);
             }, this.getRandom(250, 1000));
         });
     }
