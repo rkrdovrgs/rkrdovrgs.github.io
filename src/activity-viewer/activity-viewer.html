@@ -4,8 +4,8 @@
 
     <ul>
         <li class="row" repeat.for="answer of answers">
-            <div class="col-xs-12">
-                <hljs innerhtml.bind="answer.html" language="javascript"></hljs>
+            <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
+            <div show.bind="!answer.hidden" class="col-xs-12" innerhtml.bind="answer.html">
             </div>
         </li>
     </ul>

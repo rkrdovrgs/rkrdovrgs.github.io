@@ -11,7 +11,7 @@ export class Lessons {
 
     activate() {
         this.addLessonUrl = this.router.generate("lesson-details", { key: "add" });
-        this.lessonsService.getLessons().then(lessons => this.lessons = lessons);
+        this.lessonsService.getLessonsOnce().then(lessons => this.lessons = lessons);
     }
 }
 

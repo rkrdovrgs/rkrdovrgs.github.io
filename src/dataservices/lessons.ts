@@ -83,16 +83,25 @@ export class LessonsService {
         });
     }
 
-    getLesson(key: string, resolve: (lesson: ILesson) => void) {
-        let lessonCallback = this.lessonsRef.child(key)
-            .on("value", snap => resolve(this.mapper.getLesson(key, snap.val())));
+    getLesson(lessonKey: string, resolve: (lesson: ILesson) => void) {
+        let lessonCallback = this.lessonsRef.child(lessonKey)
+            .on("value", this.getLessonCallback(lessonKey, resolve).bind(this));
 
         return () => {
             this.lessonsRef.off("value", lessonCallback);
         }
     }
 
-    getLessons(): Promise<ILesson[]> {
+    getLessonOnce(lessonKey: string, resolve: (lesson: ILesson) => void) {
+        this.lessonsRef.child(lessonKey)
+            .once("value", this.getLessonCallback(lessonKey, resolve).bind(this));
+    }
+
+    getLessonCallback(lessonKey, resolve) {
+        return snap => resolve(this.mapper.getLesson(lessonKey, snap.val()));
+    }
+
+    getLessonsOnce(): Promise<ILesson[]> {
         return new Promise(resolve => {
             this.lessonsRef.once("value", snap => {
                 let lessons = Object.keys(snap.val()).map(lessonKey => this.mapper.getLesson(lessonKey, snap.val()));

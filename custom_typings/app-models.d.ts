@@ -12,6 +12,7 @@ interface IActivity {
     key: string;
     number: number;
     name: string;
+    showAllAnswers: boolean;
     url: string;
     view: string;
     answers: {
