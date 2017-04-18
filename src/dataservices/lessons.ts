@@ -15,6 +15,7 @@ export class LessonsService {
     saveLesson(lesson: ILesson): Promise<ILesson> {
         return new Promise(resolve => {
             if (!lesson.key) {
+                delete lesson.key;
                 let lessonRef = this.lessonsRef.push(lesson);
                 lessonRef.then(() => resolve(this.mapper.getLesson(lessonRef.key, lesson)));
             }
@@ -29,6 +30,7 @@ export class LessonsService {
     saveActivity(lessonKey: string, activity: IActivity): Promise<IActivity> {
         return new Promise(resolve => {
             if (!activity.key) {
+                delete activity.key;
                 let activityRef = this.lessonsRef.child(lessonKey)
                     .child("activities")
                     .push(activity);
