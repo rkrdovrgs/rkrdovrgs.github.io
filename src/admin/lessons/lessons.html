@@ -1,0 +1,11 @@
+<template>
+    <require from="admin/lessons/lessons.css"></require>
+    <a href="admin/lessons/add" class="btn btn-primary"><i class="fa fa-plus"></i> Add lesson</a>
+    <hr>
+    <h1>Lessons</h1>
+    <ul>
+        <li repeat.for="lesson of lessons">
+            <a href="${lesson.url}">${lesson.week}.${lesson.day}</a>
+        </li>
+    </ul>
+</template>

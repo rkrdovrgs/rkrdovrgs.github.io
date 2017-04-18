@@ -1,0 +1,50 @@
+import { inject } from "aurelia-framework";
+import { LessonsService } from "dataservices/lessons";
+import { Router } from "aurelia-router";
+
+@inject(LessonsService, Router)
+export class LessonActivityDetails {
+    lesson: ILesson;
+    activity: IActivity;
+    answers: IAnswer[] = [];
+    detachLesson: IDetachListener;
+
+
+    constructor(private lessonService: LessonsService, private router: Router) { }
+
+    activate(params: { lessonKey: string, activityKey: string }) {
+        this.detachLesson = this.lessonService.getLesson(params.lessonKey, lesson => {
+            this.lesson = lesson;
+            if (!!params.activityKey) {
+                this.activity = lesson.activities[params.activityKey];
+                if (!!this.activity && !!this.activity.answers) {
+                    this.answers = Object.keys(this.activity.answers).map(answerKey => this.activity.answers[answerKey]);
+                }
+            }
+        });
+    }
+
+    deactivate() {
+        this.detachLesson();
+    }
+
+    addAnswer() {
+        this.lessonService.addAnswer(this.lesson.key, this.activity.key);
+    }
+
+    removeAnswer(answerKey: string) {
+        this.lessonService.removeAnswer(this.lesson.key, this.activity.key, answerKey);
+    }
+
+    saveActivity() {
+        this.answers.forEach(answer => {
+            this.activity.answers[answer.key] = answer;
+        });
+        this.lessonService.saveActivity(this.lesson.key, this.activity)
+            .then(activity => {
+                this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key })
+            });
+    }
+
+}
+

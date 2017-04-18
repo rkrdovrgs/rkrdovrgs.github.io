@@ -1,0 +1,41 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "preserveConstEnums": false,
+    "target": "es5",
+    "module": "amd",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "outFile": "./src/main.js",
+    "lib": [
+      "es2016",
+      "dom"
+    ],
+    "paths": {
+      "*": [
+        "src/*"
+      ],
+      "test/*": [
+        "test/*"
+      ]
+    },
+    "baseUrl": ".",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./custom_typings"
+    ]
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./custom_typings/*.d.ts"
+  ],
+  "exclude": [
+    "aurelia_project"
+  ]
+}
