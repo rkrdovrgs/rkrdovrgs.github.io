@@ -13,6 +13,8 @@ interface IActivity {
     number: number;
     name: string;
     showAllAnswers: boolean;
+    hideCode: boolean;
+    hideComments: boolean;
     url: string;
     view: string;
     answers: {

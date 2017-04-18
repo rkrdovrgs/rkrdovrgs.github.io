@@ -26,15 +26,27 @@ export class Mapper {
         activity.url = this.router.generate("lesson-activity-details", { lessonKey, activityKey });
         activity.view = this.router.generate("activity-viewer", { lessonKey, activityKey });
         for (var answerKey in activity.answers) {
-            this.getAnswer(answerKey, activity.answers);
+            this.getAnswer(answerKey, activity.answers, activity.hideComments, activity.hideCode);
         }
         return activity;
     }
 
-    getAnswer(answerKey: string, answers: { [answerKey: string]: IAnswer } | IAnswer): IAnswer {
+    getAnswer(answerKey: string, answers: { [answerKey: string]: IAnswer } | IAnswer, hideComments?: boolean, hideCode?: boolean): IAnswer {
         let answer: IAnswer = answers[answerKey] || answers;
         answer.key = answerKey;
-        answer.html = this.converter.makeHtml('```javascript\n' + answer.value + '\n```');
+        let value = answer.value;
+
+        if (hideComments) {
+            let lines = answer.value.split("\n");
+            value = lines.filter(l => !l.trim().startsWith("//")).join("\n");
+        }
+
+        if (hideCode) {
+            let lines = answer.value.split("\n");
+            value = lines.filter(l => l.trim().startsWith("//")).join("\n");
+        }
+
+        answer.html = this.converter.makeHtml('```javascript\n' + value + '\n```');
         return answer;
     }
 }

@@ -43,6 +43,9 @@ export class LessonActivityDetails {
     }
 
     saveActivity() {
+        this.activity.showAllAnswers = this.activity.showAllAnswers || false;
+        this.activity.hideComments = this.activity.hideComments || false;
+        this.activity.hideCode = this.activity.hideCode || false;
         this.answers.forEach(answer => {
             this.activity.answers[answer.key] = answer;
         });

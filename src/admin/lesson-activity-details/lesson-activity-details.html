@@ -19,6 +19,12 @@
             <label>Show all answers?</label>
             <input type="checkbox" checked.bind="activity.showAllAnswers">
         </div>
+        <div class="form-group">
+            <label>Hide comments?</label>
+            <input type="checkbox" checked.bind="activity.hideComments">
+            <label>Hide code?</label>
+            <input type="checkbox" checked.bind="activity.hideCode">
+        </div>
         <div if.bind="!!activity.key">
             <hr>
             <h2>Answers</h2>
