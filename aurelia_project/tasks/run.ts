@@ -4,8 +4,9 @@ import * as historyApiFallback from 'connect-history-api-fallback/lib';
 import project from './project';
 import build from './build';
 import buildSystem from './build-system';
-import {CLIOptions} from 'aurelia-cli';
+import { CLIOptions } from 'aurelia-cli';
 import * as notify from 'gulp-notify';
+import lint from './lint';
 
 function onChange(path) {
     console.log(`File Changed: ${path}`);
@@ -43,7 +44,7 @@ let serve = gulp.series(
 
 let refresh = gulp.series(
     buildSystem,
-    reload
+    gulp.parallel(reload, lint)
 );
 
 let watch = function () {

@@ -4,7 +4,7 @@ import routes from "config/routes";
 export class RouteConfiguration {
     private getRoutes(): Array<IRoute> {
         return _.map(routes, (r: IRoute) => {
-            r.elementId = r.elementId || r.moduleId.split('/').pop();
+            r.elementId = r.elementId || r.moduleId.split("/").pop();
             return r;
         });
     }
@@ -12,7 +12,7 @@ export class RouteConfiguration {
     configure(config): void {
         /*config.options.pushState = true;
         config.options.hashChange = false;
-        config.options.root = '/';*/
+        config.options.root = "/";*/
 
         config.map(this.getRoutes());
     }

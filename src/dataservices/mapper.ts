@@ -1,14 +1,11 @@
 import { Router } from "aurelia-router";
 import { inject } from "aurelia-dependency-injection";
-import * as showdown from "showdown";
+
 
 @inject(Router)
 export class Mapper {
-    converter;
 
-    constructor(private router: Router) {
-        this.converter = new showdown.Converter();
-    }
+    constructor(private router: Router) { }
 
     getLesson(lessonKey: string, lessons: { [lessonKey: string]: ILesson } | ILesson): ILesson {
         let lesson: ILesson = lessons[lessonKey] || lessons;
@@ -26,27 +23,15 @@ export class Mapper {
         activity.url = this.router.generate("lesson-activity-details", { lessonKey, activityKey });
         activity.view = this.router.generate("activity-viewer", { lessonKey, activityKey });
         for (var answerKey in activity.answers) {
-            this.getAnswer(answerKey, activity.answers, activity.hideComments, activity.hideCode);
+            this.getAnswer(answerKey, activity.answers);
         }
         return activity;
     }
 
-    getAnswer(answerKey: string, answers: { [answerKey: string]: IAnswer } | IAnswer, hideComments?: boolean, hideCode?: boolean): IAnswer {
+    getAnswer(answerKey: string, answers: { [answerKey: string]: IAnswer } | IAnswer): IAnswer {
         let answer: IAnswer = answers[answerKey] || answers;
         answer.key = answerKey;
-        let value = answer.value;
 
-        if (hideComments) {
-            let lines = answer.value.split("\n");
-            value = lines.filter(l => !l.trim().startsWith("//")).join("\n");
-        }
-
-        if (hideCode) {
-            let lines = answer.value.split("\n");
-            value = lines.filter(l => l.trim().startsWith("//")).join("\n");
-        }
-
-        answer.html = this.converter.makeHtml('```javascript\n' + value + '\n```');
         return answer;
     }
 }

@@ -26,7 +26,6 @@ interface IActivity {
 interface IAnswer {
     key: string;
     value: string;
-    html: string;
     taken: {
         [guid: string]: number
     }

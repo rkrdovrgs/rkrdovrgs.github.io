@@ -1,47 +1,38 @@
 import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
-import * as $ from "jquery";
 
 @inject(LessonsService, Router)
 export class LessonActivityDetails {
     lesson: ILesson;
     activity: IActivity;
     answers: IAnswer[] = [];
-    detachLesson: IDetachListener;
-
 
     constructor(private lessonService: LessonsService, private router: Router) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
-        this.detachLesson = this.lessonService.getLesson(params.lessonKey, lesson => {
+        this.lessonService.getLessonOnce(params.lessonKey, lesson => {
             this.lesson = lesson;
             if (!!params.activityKey) {
                 this.activity = lesson.activities[params.activityKey];
                 if (!!this.activity && !!this.activity.answers) {
                     this.answers = Object.keys(this.activity.answers).map(answerKey => this.activity.answers[answerKey]);
-                    setTimeout(() => {
-                        $('pre code').each(function (i, block) {
-                            hljs.highlightBlock(block);
-                        });
-                    }, 100);
                 }
             }
         });
     }
 
-    deactivate() {
-        this.detachLesson();
-    }
-
     addAnswer() {
-        this.saveActivity().then(() => this.lessonService.addAnswer(this.lesson.key, this.activity.key));
+        this.lessonService.addAnswer(this.lesson.key, this.activity.key)
+            .then(answer => this.answers.push(answer));
     }
 
     removeAnswer(answerKey: string, answerIndex: number) {
-        this.saveActivity()
-            .then(() => this.lessonService.removeAnswer(this.lesson.key, this.activity.key, answerKey))
-            .then(() => this.answers.splice(answerIndex, 1));
+        this.lessonService.removeAnswer(this.lesson.key, this.activity.key, answerKey)
+            .then(() => {
+                this.answers.splice(answerIndex, 1);
+                delete this.activity.answers[answerKey];
+            });
     }
 
     saveActivity() {
@@ -53,12 +44,11 @@ export class LessonActivityDetails {
         this.answers.forEach(answer => {
             this.activity.answers[answer.key] = answer;
         });
-        let navigate = !this.activity.key;
+
         return this.lessonService.saveActivity(this.lesson.key, this.activity)
-            .then(activity => {
-                if (navigate)
-                    this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key });
-            });
+            .then(activity =>
+                this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key })
+            );
     }
 
 }

@@ -1,7 +1,5 @@
-﻿import { HttpClient, json } from "aurelia-fetch-client";
-import { inject } from "aurelia-dependency-injection";
+﻿import { HttpClient } from "aurelia-fetch-client";
 import * as _ from "lodash";
-import * as moment from "moment";
 
 export class BaseApiService extends HttpClient {
     constructor() {

@@ -34,7 +34,7 @@ export class LessonDetails {
     saveLesson() {
         this.lessonService.saveLesson(this.lesson)
             .then(lesson => {
-                this.router.navigateToRoute("lesson-details", { key: lesson.key })
+                this.router.navigateToRoute("lesson-details", { key: lesson.key });
             });
     }
 

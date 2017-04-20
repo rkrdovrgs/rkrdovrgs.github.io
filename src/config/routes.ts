@@ -23,4 +23,4 @@
         moduleId: "admin/lessons/lessons",
         title: "Lessons"
     }
-] as Array<IRoute>
+] as Array<IRoute>;

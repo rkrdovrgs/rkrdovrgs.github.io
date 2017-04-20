@@ -6,7 +6,8 @@
     <ul>
         <li class="row" repeat.for="answer of answers">
             <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
-            <div show.bind="!answer.hidden" class="col-xs-12" innerhtml.bind="answer.html">
+            <div show.bind="!answer.hidden" class="col-xs-12">
+                <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments" hide-code.bind="activity.hideCode"></hljs>
             </div>
         </li>
     </ul>

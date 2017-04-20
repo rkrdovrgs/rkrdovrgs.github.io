@@ -18,8 +18,7 @@ export class LessonsService {
                 delete lesson.key;
                 let lessonRef = this.lessonsRef.push(lesson);
                 lessonRef.then(() => resolve(this.mapper.getLesson(lessonRef.key, lesson)));
-            }
-            else {
+            } else {
                 this.lessonsRef.child(lesson.key)
                     .update(lesson)
                     .then(() => resolve(lesson));
@@ -35,8 +34,7 @@ export class LessonsService {
                     .child("activities")
                     .push(activity);
                 activityRef.then(() => resolve(this.mapper.getActivity(lessonKey, activityRef.key, activity)));
-            }
-            else {
+            } else {
                 this.lessonsRef.child(lessonKey)
                     .child("activities")
                     .child(activity.key)
@@ -48,12 +46,15 @@ export class LessonsService {
 
     addAnswer(lessonKey: string, activityKey: string): Promise<IAnswer> {
         return new Promise(resolve => {
+            let answer = <IAnswer>{
+                value: ""
+            };
             let answerRef = this.lessonsRef.child(lessonKey)
                 .child("activities")
                 .child(activityKey)
                 .child("answers")
-                .push({ value: "" });
-            answerRef.then(() => resolve(this.mapper.getAnswer(answerRef.key, {})));
+                .push(answer);
+            answerRef.then(() => resolve(this.mapper.getAnswer(answerRef.key, answer)));
         });
     }
 
@@ -72,13 +73,12 @@ export class LessonsService {
 
     removeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<undefined> {
         return new Promise(resolve => {
-            let answerRef = this.lessonsRef.child(lessonKey)
+            this.lessonsRef.child(lessonKey)
                 .child("activities")
                 .child(activityKey)
                 .child("answers")
                 .child(answerKey)
-                .remove();
-            answerRef.then(() => resolve());
+                .remove(resolve);
         });
     }
 
@@ -88,7 +88,7 @@ export class LessonsService {
 
         return () => {
             this.lessonsRef.off("value", lessonCallback);
-        }
+        };
     }
 
     getLessonOnce(lessonKey: string, resolve: (lesson: ILesson) => void) {

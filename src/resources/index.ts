@@ -3,12 +3,13 @@
 export function configure(config: FrameworkConfiguration) {
     let resources = [
         //value-converters
-        './value-converters/match-by',
-        './value-converters/moment-format',
-        './value-converters/pattern',
+        "./value-converters/match-by",
+        "./value-converters/moment-format",
+        "./value-converters/pattern",
 
         //elements
-        './elements/section-async/section-async',
+        "./elements/section-async/section-async",
+        "./elements/hljs/hljs",
     ];
 
     config.globalResources(resources);

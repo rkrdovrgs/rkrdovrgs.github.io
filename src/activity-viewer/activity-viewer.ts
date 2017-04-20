@@ -2,7 +2,6 @@ import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
 import * as _ from "lodash";
-import * as $ from "jquery";
 import environment from "environment";
 
 @inject(LessonsService, Router)
@@ -33,35 +32,25 @@ export class ActivityViewer {
                     });
                 case "blink":
                     let triesKey = `answer-tries${params.lessonKey}${params.activityKey}`;
-                    this.tries = parseInt(this.storage.getItem(triesKey)) || 0;
+                    this.tries = parseInt(this.storage.getItem(triesKey), 10) || 0;
                     this.tries++;
                     this.storage.setItem(triesKey, this.tries.toString());
 
                     break;
             }
-            this.highlight();
         });
-    }
-
-    highlight() {
-        setTimeout(() => {
-            $('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
-        }, 100);
     }
 
     blinkAnswer() {
         if (this.currentAnswerIndex === Object.keys(this.activity.answers).length) {
-            this.answers = [<IAnswer>{ html: '<pre><code>//Ran out of hints</code></pre>' }];
+            this.answers = [<IAnswer>{ value: "//Ran out of hints" }];
         } else {
             let answerKey = Object.keys(this.activity.answers)[this.currentAnswerIndex];
             this.answers = [this.activity.answers[answerKey]];
-            this.highlight();
             this.currentAnswerIndex++;
             setTimeout(() => {
                 this.answers = [];
-            }, (this.activity.answers[answerKey].html.length * this.activity.speedRatio) + 100);
+            }, (this.activity.answers[answerKey].value.length * this.activity.speedRatio) + 100);
         }
     }
 
@@ -95,7 +84,7 @@ export class ActivityViewer {
     }
 
     getUniqueRandom(length: number) {
-        var uniqueArr = []
+        var uniqueArr = [];
         while (uniqueArr.length < length) {
             var randomNumber = this.getRandom(0, length);
             if (uniqueArr.length !== length - 1 && randomNumber === uniqueArr.length) continue;
@@ -111,8 +100,8 @@ export class ActivityViewer {
             .toString(16)
             .substring(1);
 
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-            s4() + '-' + s4() + s4() + s4();
+        return s4() + s4() + "-" + s4() + "-" + s4() + "-" +
+            s4() + "-" + s4() + s4() + s4();
     }
 }
 

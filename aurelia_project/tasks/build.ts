@@ -2,10 +2,11 @@ import * as gulp from 'gulp';
 import * as del from 'del';
 import project from './project';
 import buildSystem from './build-system';
+import lint from './lint';
 
 export default gulp.series(
     clean,
-    buildSystem
+    gulp.parallel(lint, buildSystem)
 );
 
 function clean() {
