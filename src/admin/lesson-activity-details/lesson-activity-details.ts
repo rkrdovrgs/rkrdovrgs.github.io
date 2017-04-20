@@ -24,7 +24,11 @@ export class LessonActivityDetails {
 
     addAnswer() {
         this.lessonService.addAnswer(this.lesson.key, this.activity.key)
-            .then(answer => this.answers.push(answer));
+            .then(answer => {
+                this.activity.answers = this.activity.answers || {};
+                this.activity.answers[answer.key] = answer;
+                this.answers.push(this.activity.answers[answer.key]);
+            });
     }
 
     removeAnswer(answerKey: string, answerIndex: number) {
@@ -37,7 +41,7 @@ export class LessonActivityDetails {
 
     saveActivity() {
         this.activity.type = this.activity.type || "one-answer";
-        this.activity.speedRatio = this.activity.speedRatio || 25;
+        this.activity.speedRatio = this.activity.speedRatio || 50;
         this.activity.tries = this.activity.tries || 3;
         this.activity.hideComments = this.activity.hideComments || false;
         this.activity.hideCode = this.activity.hideCode || false;

@@ -10,8 +10,8 @@ export class ActivityViewer {
     activity: IActivity;
     answers: IAnswer[] = [];
     storage = environment.debug ? sessionStorage : localStorage;
-    tries: number = 0;
     currentAnswerIndex: number = 0;
+    tries = {};
 
 
     constructor(private lessonService: LessonsService, private router: Router) { }
@@ -31,27 +31,30 @@ export class ActivityViewer {
                         return this.activity.answers[answerKey];
                     });
                 case "blink":
-                    let triesKey = `answer-tries${params.lessonKey}${params.activityKey}`;
-                    this.tries = parseInt(this.storage.getItem(triesKey), 10) || 0;
-                    this.tries++;
-                    this.storage.setItem(triesKey, this.tries.toString());
-
+                    this.nextAnswer(0);
                     break;
             }
         });
     }
 
     blinkAnswer() {
-        if (this.currentAnswerIndex === Object.keys(this.activity.answers).length) {
-            this.answers = [<IAnswer>{ value: "//Ran out of hints" }];
-        } else {
-            let answerKey = Object.keys(this.activity.answers)[this.currentAnswerIndex];
-            this.answers = [this.activity.answers[answerKey]];
-            this.currentAnswerIndex++;
-            setTimeout(() => {
-                this.answers = [];
-            }, (this.activity.answers[answerKey].value.length * this.activity.speedRatio) + 100);
-        }
+        let answerKey = Object.keys(this.activity.answers)[this.currentAnswerIndex];
+        this.tries[this.currentAnswerIndex]++;
+        this.answers = [this.activity.answers[answerKey]];
+
+        setTimeout(() => {
+            this.answers = [];
+        }, (this.activity.answers[answerKey].value.length * this.activity.speedRatio) + 100);
+    }
+
+    nextAnswer(step: number) {
+        this.currentAnswerIndex += step;
+
+        if (this.currentAnswerIndex < 0) this.currentAnswerIndex = 0;
+        if (this.currentAnswerIndex >= Object.keys(this.activity.answers).length)
+            this.currentAnswerIndex = Object.keys(this.activity.answers).length - 1;
+
+        this.tries[this.currentAnswerIndex] = this.tries[this.currentAnswerIndex] || 0;
     }
 
     showOneAnswer(lessonKey: string, activityKey: string) {

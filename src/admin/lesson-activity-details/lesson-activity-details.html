@@ -11,21 +11,29 @@
             <label>Name</label>
             <input type="text" class="form-control" placeholder="Name" value.bind="activity.name">
         </div>
-        <div class="form-group">
-            <label>Hide comments?</label>
-            <input type="checkbox" checked.bind="activity.hideComments">
-            <label>Hide code?</label>
-            <input type="checkbox" checked.bind="activity.hideCode">
+        <div class="form-group checkbox-list">
+            <label>
+                <input type="checkbox" checked.bind="activity.hideComments">
+                Hide comments?
+            </label>
+            <label>
+                <input type="checkbox" checked.bind="activity.hideCode">
+                Hide code?
+            </label>
         </div>
-        <div class="form-group">
-            <label>One answer</label>
-            <input type="radio" name="activity-type" value="one-answer" checked.bind="activity.type">
-
-            <label>All answers</label>
-            <input type="radio" name="activity-type" value="all-answers" checked.bind="activity.type">
-
-            <label>Blink</label>
-            <input type="radio" name="activity-type" value="blink" checked.bind="activity.type">
+        <div class="form-group radiobutton-list">
+            <label>
+                <input type="radio" name="activity-type" value="one-answer" checked.bind="activity.type">
+                One answer
+            </label>
+            <label>
+                <input type="radio" name="activity-type" value="all-answers" checked.bind="activity.type">                
+                All answers
+            </label>
+            <label>
+                <input type="radio" name="activity-type" value="blink" checked.bind="activity.type">                
+                Blink
+            </label>
         </div>
         <div class="form-group row" if.bind="activity.type === 'blink'">
             <div class="col-xs-6">

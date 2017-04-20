@@ -2,7 +2,14 @@
     <require from="activity-viewer/activity-viewer.css"></require>
     <label>Lesson ${lesson.week}.${lesson.day} - <small>${activity.name}</small></label>
     <br>
-    <button class="btn btn-primary" if.bind="activity.type === 'blink' && tries < activity.tries && answers.length === 0" click.trigger="blinkAnswer()">Hint</button>
+    <div if.bind="activity.type === 'blink'">
+        <label>Answer: ${currentAnswerIndex + 1}</label>
+        <label>Tries left: ${activity.tries - tries[currentAnswerIndex]}</label>
+        <br>
+        <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(-1)">Previous Hint</button>
+        <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(1)">Next Hint</button>
+        <button class="btn btn-primary" if.bind="tries[currentAnswerIndex] < activity.tries && answers.length === 0" click.trigger="blinkAnswer()">${tries[currentAnswerIndex] ? 'Repeat' : 'Show'} Hint</button>
+    </div>
     <ul>
         <li class="row" repeat.for="answer of answers">
             <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
