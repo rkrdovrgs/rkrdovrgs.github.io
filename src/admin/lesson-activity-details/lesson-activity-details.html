@@ -8,10 +8,6 @@
         <button type="submit" click.trigger="saveActivity()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
         <hr>
         <div class="form-group">
-            <label>Number</label>
-            <input type="text" class="form-control" placeholder="Number" value.bind="activity.number">
-        </div>
-        <div class="form-group">
             <label>Name</label>
             <input type="text" class="form-control" placeholder="Name" value.bind="activity.name">
         </div>
@@ -45,7 +41,6 @@
         <div if.bind="!!activity.key">
             <hr>
             <h2>Answers</h2>
-            <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
             <hr if.bind="answers.length">
             <ul>
                 <li class="row" repeat.for="answer of answers">
@@ -55,10 +50,11 @@
                     <div class="col-xs-12" innerhtml.bind="answer.html">
                     </div>
                     <div class="col-xs-12">
-                        <button click.trigger="removeAnswer(answer.key)" class="btn btn-default"><i class="fa fa-trash"></i> Remove answer</button>
+                        <button click.trigger="removeAnswer(answer.key, $index)" class="btn btn-default"><i class="fa fa-trash"></i> Remove answer</button>
                     </div>
                 </li>
             </ul>
+            <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
         </div>
     </form>
 </template>

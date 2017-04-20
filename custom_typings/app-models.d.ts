@@ -10,7 +10,6 @@
 
 interface IActivity {
     key: string;
-    number: number;
     name: string;
     type: string;
     speedRatio: number;

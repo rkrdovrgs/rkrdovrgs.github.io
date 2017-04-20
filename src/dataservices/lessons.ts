@@ -34,7 +34,6 @@ export class LessonsService {
                 let activityRef = this.lessonsRef.child(lessonKey)
                     .child("activities")
                     .push(activity);
-                activity.key = activityRef.key;
                 activityRef.then(() => resolve(this.mapper.getActivity(lessonKey, activityRef.key, activity)));
             }
             else {

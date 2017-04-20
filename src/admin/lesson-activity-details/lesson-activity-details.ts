@@ -35,11 +35,13 @@ export class LessonActivityDetails {
     }
 
     addAnswer() {
-        this.lessonService.addAnswer(this.lesson.key, this.activity.key);
+        this.saveActivity().then(() => this.lessonService.addAnswer(this.lesson.key, this.activity.key));
     }
 
-    removeAnswer(answerKey: string) {
-        this.lessonService.removeAnswer(this.lesson.key, this.activity.key, answerKey);
+    removeAnswer(answerKey: string, answerIndex: number) {
+        this.saveActivity()
+            .then(() => this.lessonService.removeAnswer(this.lesson.key, this.activity.key, answerKey))
+            .then(() => this.answers.splice(answerIndex, 1));
     }
 
     saveActivity() {
@@ -51,9 +53,11 @@ export class LessonActivityDetails {
         this.answers.forEach(answer => {
             this.activity.answers[answer.key] = answer;
         });
-        this.lessonService.saveActivity(this.lesson.key, this.activity)
+        let navigate = !this.activity.key;
+        return this.lessonService.saveActivity(this.lesson.key, this.activity)
             .then(activity => {
-                this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key })
+                if (navigate)
+                    this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key });
             });
     }
 
