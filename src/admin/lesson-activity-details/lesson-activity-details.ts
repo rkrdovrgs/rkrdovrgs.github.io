@@ -20,25 +20,36 @@ export class LessonActivityDetails {
             if (!!params.activityKey) {
                 this.activity = lesson.activities[params.activityKey];
                 if (!!this.activity && !!this.activity.answers) {
-                    this.answers = Object.keys(this.activity.answers).map(answerKey => {
-                        this.listeners.push(
-                            this.lessonService.getAnswerTaken(this.lesson.key, this.activity.key, answerKey)
-                                .on((taken: { [key: string]: IUserInfo }) => {
-                                    this.taken[answerKey] = _(taken)
-                                        .filter((userInfo: IUserInfo) => !!userInfo.displayName)
-                                        .map(userInfo => userInfo)
-                                        .value();
-                                })
-                        );
-                        return this.activity.answers[answerKey];
-                    });
+                    this.answers = Object.keys(this.activity.answers)
+                        .map(answerKey => this.activity.answers[answerKey]);
                 }
             }
         });
     }
 
     deactivate() {
-        this.listeners.forEach(dettach => dettach());
+        this.listeners.forEach(dettach => {
+            dettach();
+        });
+    }
+
+    setTakenAnswers() {
+        if (this.showTaken) {
+            Object.keys(this.activity.answers).map(answerKey => {
+                this.listeners.push(
+                    this.lessonService.getAnswerTaken(this.lesson.key, this.activity.key, answerKey)
+                        .on((taken: { [key: string]: IUserInfo }) => {
+                            this.taken[answerKey] = _(taken)
+                                .filter((userInfo: IUserInfo) => !!userInfo.displayName)
+                                .map(userInfo => userInfo)
+                                .value();
+                        })
+                );
+            });
+        } else {
+            this.deactivate();
+            this.listeners = [];
+        }
     }
 
     addAnswer() {

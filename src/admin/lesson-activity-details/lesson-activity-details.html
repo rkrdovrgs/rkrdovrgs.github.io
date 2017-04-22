@@ -2,7 +2,6 @@
     <require from="admin/lesson-activity-details/lesson-activity-details.css"></require>
     <a href="${lesson.url}" class="btn btn-default">Lesson ${lesson.week}.${lesson.day}</a>
     <a if.bind="!!activity.key" href="${activity.view}" target="blank" class="btn btn-primary"><i class="fa fa-eye"></i> Preview Activity</a>
-
     <hr>
     <form>
         <h2>Activity</h2>
@@ -48,14 +47,14 @@
         </div>
         <div class="form-group radiobutton-list" if.bind="activity.type === 'one-answer'">
             <label>
-                <input type="checkbox" checked.bind="showTaken">
+                <input type="checkbox" checked.bind="showTaken" change.trigger="setTakenAnswers()">
                 See who's taken the answers?
             </label>
         </div>
 
         <div if.bind="!!activity.key">
             <hr>
-            <h2>Answers</h2>
+            <h2>Answers <i class="fa fa-history text-success" if.bind="showTaken"></i></h2>
             <hr if.bind="answers.length">
             <ul>
                 <li class="row" repeat.for="answer of answers">
@@ -63,7 +62,7 @@
                         <li>
                             <hr>
                         </li>
-                        <li repeat.for="user of taken[answer.key]">${user.displayName} - ${user.email}</li>
+                        <li repeat.for="user of taken[answer.key]"><b>${user.displayName}</b>: ${user.email}</li>
                     </ul>
                     <div class="col-xs-12" if.bind="!showTaken || activity.type !== 'one-answer'">
                         <textarea class="form-control" rows="3" value.bind="answer.value"></textarea>

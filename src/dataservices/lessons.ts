@@ -83,7 +83,7 @@ export class LessonsService {
             on: (callback) => {
                 let takenCallback = takenRef.on("value", snap => callback(snap.val()));
                 return () => {
-                    this.lessonsRef.off("value", takenCallback);
+                    takenRef.off("value", takenCallback);
                 };
             }
         };
@@ -118,7 +118,7 @@ export class LessonsService {
             on: (resolve: (lesson: ILesson) => void) => {
                 let lessonCallback = lessonRef.on("value", this.getLessonCallback(lessonKey, resolve).bind(this));
                 return () => {
-                    this.lessonsRef.off("value", lessonCallback);
+                    lessonRef.off("value", lessonCallback);
                 };
             },
             once: (resolve: (lesson: ILesson) => void) => {
