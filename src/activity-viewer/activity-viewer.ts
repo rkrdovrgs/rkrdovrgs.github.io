@@ -2,6 +2,7 @@ import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
 import * as _ from "lodash";
+import * as $ from "jquery";
 import { Storage } from "helpers/storage";
 
 @inject(LessonsService, Router, Storage)
@@ -42,7 +43,7 @@ export class ActivityViewer {
         this.tries[this.currentAnswerKey]++;
         this.lessonService.blink(this.lesson.key, this.activity.key, this.tries);
         this.answers = [this.activity.answers[this.currentAnswerKey]];
-
+        setTimeout(() => $(".answer-overlay").focus());
         setTimeout(() => {
             this.answers = [];
         }, (this.activity.answers[this.currentAnswerKey].value.length * this.activity.speedRatio) + 100);
