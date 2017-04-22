@@ -16,7 +16,7 @@ export class LessonDetails {
         this.lessonsUrl = this.router.generate("lessons");
         if (!!params.key) {
             this.addActivityUrl = this.router.generate("lesson-activity-details", { lessonKey: params.key, activityKey: "add" });
-            this.detachLesson = this.lessonService.getLesson(params.key, lesson => {
+            this.detachLesson = this.lessonService.getLesson(params.key).on(lesson => {
                 this.lesson = lesson;
                 if (!!lesson.activities) {
                     this.activities = Object.keys(lesson.activities).map(activityKey => lesson.activities[activityKey]);

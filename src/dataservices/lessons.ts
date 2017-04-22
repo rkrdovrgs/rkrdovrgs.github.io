@@ -71,6 +71,24 @@ export class LessonsService {
         });
     }
 
+    getAnswerTaken(lessonKey: string, activityKey: string, answerKey: string) {
+        let takenRef = this.lessonsRef
+            .child(lessonKey)
+            .child("activities")
+            .child(activityKey)
+            .child("answers")
+            .child(answerKey)
+            .child("taken");
+        return {
+            on: (callback) => {
+                let takenCallback = takenRef.on("value", snap => callback(snap.val()));
+                return () => {
+                    this.lessonsRef.off("value", takenCallback);
+                };
+            }
+        };
+    }
+
     blink(lessonKey: string, activityKey: string, tries: { [answerKey: string]: number }): Promise<undefined> {
         return new Promise(resolve => {
             let answerRef = this.lessonsRef.child(lessonKey)
@@ -94,18 +112,19 @@ export class LessonsService {
         });
     }
 
-    getLesson(lessonKey: string, resolve: (lesson: ILesson) => void) {
-        let lessonCallback = this.lessonsRef.child(lessonKey)
-            .on("value", this.getLessonCallback(lessonKey, resolve).bind(this));
-
-        return () => {
-            this.lessonsRef.off("value", lessonCallback);
+    getLesson(lessonKey: string) {
+        let lessonRef = this.lessonsRef.child(lessonKey);
+        return {
+            on: (resolve: (lesson: ILesson) => void) => {
+                let lessonCallback = lessonRef.on("value", this.getLessonCallback(lessonKey, resolve).bind(this));
+                return () => {
+                    this.lessonsRef.off("value", lessonCallback);
+                };
+            },
+            once: (resolve: (lesson: ILesson) => void) => {
+                lessonRef.once("value", this.getLessonCallback(lessonKey, resolve).bind(this));
+            }
         };
-    }
-
-    getLessonOnce(lessonKey: string, resolve: (lesson: ILesson) => void) {
-        this.lessonsRef.child(lessonKey)
-            .once("value", this.getLessonCallback(lessonKey, resolve).bind(this));
     }
 
     getLessonCallback(lessonKey, resolve) {

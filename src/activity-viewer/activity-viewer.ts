@@ -17,7 +17,7 @@ export class ActivityViewer {
     constructor(private lessonService: LessonsService, private router: Router, private storage: Storage) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
-        this.lessonService.getLessonOnce(params.lessonKey, lesson => {
+        this.lessonService.getLesson(params.lessonKey).once(lesson => {
             this.lesson = lesson;
             this.activity = lesson.activities[params.activityKey];
             switch (this.activity.type) {
