@@ -12,7 +12,7 @@ export class ActivityViewer {
     answers: IAnswer[] = [];
     currentAnswerIndex: number = 0;
     currentAnswerKey: string = "";
-    tries: { [answerKey: string]: number };
+    tries: { [answerKey: string]: number } = {};
 
 
     constructor(private lessonService: LessonsService, private router: Router, private storage: Storage) { }
@@ -32,7 +32,8 @@ export class ActivityViewer {
                         return this.activity.answers[answerKey];
                     });
                 case "blink":
-                    this.tries = this.activity.blinks[btoa(this.storage.email)].tries;
+                    if(this.activity.blinks && this.activity.blinks[btoa(this.storage.email)])
+                        this.tries = this.activity.blinks[btoa(this.storage.email)].tries || {};
                     this.nextAnswer(0);
                     break;
             }
