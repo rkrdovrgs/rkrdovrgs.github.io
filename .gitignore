@@ -255,3 +255,4 @@ src/main.js
 src/environment.ts
 scripts/
 content/fonts/
+dist/

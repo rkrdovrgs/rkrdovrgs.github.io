@@ -1,14 +1,14 @@
 ﻿import { BaseApiService } from "dataservices/base";
 import { inject } from "aurelia-dependency-injection";
 import { Mapper } from "./mapper";
-
+import { Storage } from "helpers/storage";
 import * as firebase from "firebase";
 
-@inject(BaseApiService, Mapper)
+@inject(BaseApiService, Mapper, Storage)
 export class LessonsService {
     lessonsRef: firebase.database.Reference;
 
-    constructor(private api: BaseApiService, private mapper: Mapper) {
+    constructor(private api: BaseApiService, private mapper: Mapper, private storage: Storage) {
         this.lessonsRef = firebase.database().ref("lessons");
     }
 
@@ -58,7 +58,7 @@ export class LessonsService {
         });
     }
 
-    takeAnswer(lessonKey: string, activityKey: string, answerKey: string, guid: string): Promise<undefined> {
+    takeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<undefined> {
         return new Promise(resolve => {
             let answerRef = this.lessonsRef.child(lessonKey)
                 .child("activities")
@@ -66,7 +66,19 @@ export class LessonsService {
                 .child("answers")
                 .child(answerKey)
                 .child("taken")
-                .update({ [guid]: firebase.database.ServerValue.TIMESTAMP });
+                .push(this.storage.getUserInfo());
+            answerRef.then(() => resolve(undefined));
+        });
+    }
+
+    blink(lessonKey: string, activityKey: string, tries: { [answerKey: string]: number }): Promise<undefined> {
+        return new Promise(resolve => {
+            let answerRef = this.lessonsRef.child(lessonKey)
+                .child("activities")
+                .child(activityKey)
+                .child("blinks")
+                .child(btoa(this.storage.email))
+                .update({ user: this.storage.getUserInfo(), tries });
             answerRef.then(() => resolve(undefined));
         });
     }

@@ -15,7 +15,8 @@ export default gulp.series(
         processMarkup,
         processCSS
     ),
-    writeBundles
+    writeBundles,
+    dist
 );
 
 function readProjectConfiguration() {
@@ -25,4 +26,9 @@ function readProjectConfiguration() {
 
 function writeBundles() {
     return build.dest();
+}
+
+function dist() {
+    return gulp.src(['index.html', '*scripts*/**/*', '*content*/**/*'])
+        .pipe(gulp.dest('dist'));
 }

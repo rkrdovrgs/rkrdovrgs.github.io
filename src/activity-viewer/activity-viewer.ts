@@ -2,20 +2,19 @@ import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
 import * as _ from "lodash";
-import environment from "environment";
+import { Storage } from "helpers/storage";
 
-@inject(LessonsService, Router)
+@inject(LessonsService, Router, Storage)
 export class ActivityViewer {
     lesson: ILesson;
     activity: IActivity;
     answers: IAnswer[] = [];
-    storage = environment.debug ? sessionStorage : localStorage;
     currentAnswerIndex: number = 0;
     currentAnswerKey: string = "";
-    tries;
+    tries: { [answerKey: string]: number };
 
 
-    constructor(private lessonService: LessonsService, private router: Router) { }
+    constructor(private lessonService: LessonsService, private router: Router, private storage: Storage) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
         this.lessonService.getLessonOnce(params.lessonKey, lesson => {
@@ -23,7 +22,7 @@ export class ActivityViewer {
             this.activity = lesson.activities[params.activityKey];
             switch (this.activity.type) {
                 case "one-answer":
-                    this.showOneAnswer(params.lessonKey, params.activityKey);
+                    this.showOneAnswer();
                     break;
                 case "all-answers":
                     var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
@@ -32,7 +31,7 @@ export class ActivityViewer {
                         return this.activity.answers[answerKey];
                     });
                 case "blink":
-                    this.tries = JSON.parse(this.storage.getItem(`answerTries${params.lessonKey}${params.activityKey}`) || "{}");
+                    this.tries = this.activity.blinks[btoa(this.storage.email)].tries;
                     this.nextAnswer(0);
                     break;
             }
@@ -41,7 +40,7 @@ export class ActivityViewer {
 
     blinkAnswer() {
         this.tries[this.currentAnswerKey]++;
-        this.storage.setItem(`answerTries${this.lesson.key}${this.activity.key}`, JSON.stringify(this.tries));
+        this.lessonService.blink(this.lesson.key, this.activity.key, this.tries);
         this.answers = [this.activity.answers[this.currentAnswerKey]];
 
         setTimeout(() => {
@@ -61,28 +60,30 @@ export class ActivityViewer {
         this.tries[this.currentAnswerKey] = this.tries[this.currentAnswerKey] || 0;
     }
 
-    showOneAnswer(lessonKey: string, activityKey: string) {
-        let key = `answer${lessonKey}${activityKey}`;
-        let guid = this.storage.getItem("guid");
-        if (!guid) {
-            guid = this.guid();
-            this.storage.setItem("guid", guid);
-        }
+    showOneAnswer() {
+        let answer = _(this.activity.answers)
+            .filter((answer: IAnswer) =>
+                _.some(answer.taken, (user: IUserInfo) => user.email === this.storage.email)
+            )
+            .map((answer: IAnswer) => answer)
+            .value();
 
-        let answerKey = this.storage.getItem(key);
-        if (!answerKey) {
+        if (!answer.length) {
             let minSelected = _.min(_.map(this.activity.answers, (ans: IAnswer, key) => {
                 return Object.keys(ans.taken || {}).length;
             }));
-            let answers = _(this.activity.answers).map(answer => answer).filter(answer => Object.keys(answer.taken || {}).length === minSelected).value();
+
+            let answers = _(this.activity.answers)
+                .map(answer => answer)
+                .filter(answer => Object.keys(answer.taken || {}).length === minSelected)
+                .value();
+
             let choice = this.getRandom(0, answers.length);
             let answer = answers[choice];
             this.answers = [answer];
-            this.storage.setItem(key, answer.key);
-            this.lessonService.takeAnswer(lessonKey, activityKey, answer.key, guid);
+            this.lessonService.takeAnswer(this.lesson.key, this.activity.key, answer.key);
         } else {
-            let answer = this.activity.answers[answerKey];
-            this.answers = [answer];
+            this.answers = [answer[0]];
         }
     }
 
@@ -100,15 +101,6 @@ export class ActivityViewer {
         }
 
         return uniqueArr;
-    }
-
-    guid() {
-        let s4 = () => Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-
-        return s4() + s4() + "-" + s4() + "-" + s4() + "-" +
-            s4() + "-" + s4() + s4() + s4();
     }
 }
 

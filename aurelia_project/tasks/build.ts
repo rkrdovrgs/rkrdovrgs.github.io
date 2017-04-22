@@ -10,6 +10,6 @@ export default gulp.series(
 );
 
 function clean() {
-    return del([project.platform.output]);
+    return del([project.platform.output, 'dist']);
 }
 

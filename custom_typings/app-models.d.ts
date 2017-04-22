@@ -4,7 +4,7 @@
     key: string;
     url: string;
     activities: {
-        [key: string]: IActivity
+        [activityKey: string]: IActivity
     }
 }
 
@@ -19,8 +19,16 @@ interface IActivity {
     url: string;
     view: string;
     answers: {
-        [key: string]: IAnswer
+        [answerKey: string]: IAnswer
     }
+    blinks: {
+        [email64: string]: IBlinkActivity
+    }
+}
+
+interface IBlinkActivity {
+    tries: { [anserKey: string]: number };
+    user: IUserInfo;
 }
 
 interface IAnswer {
@@ -33,4 +41,20 @@ interface IAnswer {
 
 interface IDetachListener {
     (): void;
+}
+
+interface IRoute {
+    route: string | string[];
+    moduleId: string;
+    title?: string;
+    auth?: boolean;
+    admin?: boolean;
+    elementId?: string;
+    name?: string;
+    ssoUser?: boolean;
+}
+
+interface IUserInfo {
+    displayName: string;
+    email: string;
 }
