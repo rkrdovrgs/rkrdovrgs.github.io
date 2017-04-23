@@ -15,21 +15,21 @@
       "./node_modules/@types/**/*.d.ts",
       "./custom_typings/**/*.d.ts"
     ],
-    "source": "src\\**\\*.ts"
+    "source": "src/**/*.ts"
   },
   "markupProcessor": {
     "id": "none",
     "displayName": "None",
     "fileExtension": ".html",
-    "source": "src\\**\\*.html"
+    "source": "src/**/*.html"
   },
   "cssProcessor": {
     "id": "less",
     "displayName": "Less",
     "fileExtension": ".less",
     "source": [
-      "src\\**\\*.less",
-      "content\\less\\*.less"
+      "src/**/*.less",
+      "content/less/*.less"
     ]
   },
   "jsDepsProcessor": {
@@ -37,7 +37,7 @@
     "displayName": "None",
     "fileExtension": ".js",
     "source": [
-      "node_modules\\materialize-css\\js\\*.js"
+      "node_modules/materialize-css/js/*.js"
     ]
   },
   "editor": {
@@ -47,15 +47,15 @@
   "unitTestRunner": {
     "id": "karma",
     "displayName": "Karma",
-    "source": "test\\unit\\**\\*.ts"
+    "source": "test/unit/**/*.ts"
   },
   "paths": {
     "root": "src",
-    "resources": "src\\resources",
-    "elements": "src\\resources\\elements",
-    "attributes": "src\\resources\\attributes",
-    "valueConverters": "src\\resources\\value-converters",
-    "bindingBehaviors": "src\\resources\\binding-behaviors"
+    "resources": "src/resources",
+    "elements": "src/resources/elements",
+    "attributes": "src/resources/attributes",
+    "valueConverters": "src/resources/value-converters",
+    "bindingBehaviors": "src/resources/binding-behaviors"
   },
   "testFramework": {
     "id": "jasmine",

@@ -8,6 +8,13 @@ export default [
         title: "Activity Answers"
     },
     {
+        name: "lesson-activity-answers-taken",
+        route: ["admin/lessons/:lessonKey/activities/:activityKey/answers-taken"],
+        moduleId: "admin/lesson-activity/answers-taken/answers-taken",
+        title: "Activity Details",
+        admin: true
+    },
+    {
         name: "lesson-activity-details",
         route: ["admin/lessons/:lessonKey/activities/add", "admin/lessons/:lessonKey/activities/:activityKey"],
         moduleId: "admin/lesson-activity-details/lesson-activity-details",

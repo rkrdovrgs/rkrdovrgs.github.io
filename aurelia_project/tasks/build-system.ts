@@ -15,8 +15,7 @@ export default gulp.series(
         processMarkup,
         processCSS
     ),
-    writeBundles,
-    dist
+    CLIOptions.getEnvironment() === 'prod' ? gulp.series(writeBundles, dist) : writeBundles
 );
 
 function readProjectConfiguration() {

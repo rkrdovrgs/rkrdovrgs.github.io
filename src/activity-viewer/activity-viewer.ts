@@ -31,8 +31,9 @@ export class ActivityViewer {
                         var answerKey = Object.keys(this.activity.answers)[r];
                         return this.activity.answers[answerKey];
                     });
+                    break;
                 case "blink":
-                    if(this.activity.blinks && this.activity.blinks[btoa(this.storage.email)])
+                    if (this.activity.blinks && this.activity.blinks[btoa(this.storage.email)])
                         this.tries = this.activity.blinks[btoa(this.storage.email)].tries || {};
                     this.nextAnswer(0);
                     break;

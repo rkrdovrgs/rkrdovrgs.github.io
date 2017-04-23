@@ -1,0 +1,23 @@
+<template>
+    <require from="admin/lesson-activity/answers-taken/answers-taken.css"></require>
+    <a href="${activityUrl}" class="btn btn-default">${activity.name} - <small>Lesson ${lesson.week}.${lesson.day}</small></a>
+    <hr>
+    <form>
+        <h2>${activity.name}</h2>
+        <div>
+            <h2>Answers</h2>
+            <hr if.bind="answers.length">
+            <ul class="answers">
+                <li class="row" repeat.for="answer of answers">
+                    <ul if.bind="taken[answer.key].length">
+                        <li repeat.for="user of taken[answer.key]"><b>${user.displayName}</b>: ${user.email}</li>
+                    </ul>
+                    <div class="col-xs-12">
+                        <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments" hide-code.bind="activity.hideCode"></hljs>
+                    </div>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+    </form>
+</template>

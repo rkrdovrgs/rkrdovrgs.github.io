@@ -1,20 +1,18 @@
 import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
-import * as _ from "lodash";
 
 @inject(LessonsService, Router)
 export class LessonActivityDetails {
     lesson: ILesson;
     activity: IActivity;
     answers: IAnswer[] = [];
-    showTaken: boolean = false;
-    listeners: IDetachListener[] = [];
-    taken: { [answerKey: string]: IUserInfo[] } = {};
+    answersTakenUrl: string;
 
     constructor(private lessonService: LessonsService, private router: Router) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
+        this.answersTakenUrl = this.router.generate("lesson-activity-answers-taken", params);
         this.lessonService.getLesson(params.lessonKey).once(lesson => {
             this.lesson = lesson;
             if (!!params.activityKey) {
@@ -25,31 +23,6 @@ export class LessonActivityDetails {
                 }
             }
         });
-    }
-
-    deactivate() {
-        this.listeners.forEach(dettach => {
-            dettach();
-        });
-    }
-
-    setTakenAnswers() {
-        if (this.showTaken) {
-            Object.keys(this.activity.answers).map(answerKey => {
-                this.listeners.push(
-                    this.lessonService.getAnswerTaken(this.lesson.key, this.activity.key, answerKey)
-                        .on((taken: { [key: string]: IUserInfo }) => {
-                            this.taken[answerKey] = _(taken)
-                                .filter((userInfo: IUserInfo) => !!userInfo.displayName)
-                                .map(userInfo => userInfo)
-                                .value();
-                        })
-                );
-            });
-        } else {
-            this.deactivate();
-            this.listeners = [];
-        }
     }
 
     addAnswer() {
@@ -86,4 +59,3 @@ export class LessonActivityDetails {
     }
 
 }
-
