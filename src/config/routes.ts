@@ -17,7 +17,7 @@ export default [
     {
         name: "lesson-activity-details",
         route: ["admin/lessons/:lessonKey/activities/add", "admin/lessons/:lessonKey/activities/:activityKey"],
-        moduleId: "admin/lesson-activity-details/lesson-activity-details",
+        moduleId: "admin/lesson-activity/details/details",
         title: "Activity Details",
         admin: true
     },

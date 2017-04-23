@@ -1,5 +1,5 @@
 <template>
-    <require from="admin/lesson-activity-details/lesson-activity-details.css"></require>
+    <require from="admin/lesson-activity/details/details.css"></require>
     <a href="${lesson.url}" class="btn btn-default">Lesson ${lesson.week}.${lesson.day}</a>
     <a if.bind="!!activity.key" href="${activity.view}" target="blank" class="btn btn-primary"><i class="fa fa-eye"></i> Preview Activity</a>
     <hr>

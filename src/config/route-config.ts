@@ -4,7 +4,7 @@ import routes from "config/routes";
 export class RouteConfiguration {
     private getRoutes(): Array<IRoute> {
         return _.map(routes, (r: IRoute) => {
-            r.elementId = r.elementId || r.moduleId.split("/").pop();
+            r.elementId = r.elementId || r.name || r.moduleId.split("/").pop();
             r.auth = r.auth !== false;
             return r;
         });
