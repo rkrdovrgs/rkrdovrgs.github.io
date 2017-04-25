@@ -12,10 +12,11 @@ export class LessonActivityDetails {
     constructor(private lessonService: LessonsService, private router: Router) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
-        this.answersTakenUrl = this.router.generate("lesson-activity-answers-taken", params);
+
         this.lessonService.getLesson(params.lessonKey).once(lesson => {
             this.lesson = lesson;
             if (!!params.activityKey) {
+                this.answersTakenUrl = this.router.generate("lesson-activity-answers-taken", params);
                 this.activity = lesson.activities[params.activityKey];
                 if (!!this.activity && !!this.activity.answers) {
                     this.answers = Object.keys(this.activity.answers)
