@@ -13,6 +13,7 @@ export class ActivityViewer {
     currentAnswerIndex: number = 0;
     currentAnswerKey: string = "";
     tries: { [answerKey: string]: number } = {};
+    blinkTimeout: NodeJS.Timer;
 
 
     constructor(private lessonService: LessonsService, private router: Router, private storage: Storage) { }
@@ -21,9 +22,10 @@ export class ActivityViewer {
         this.lessonService.getLesson(params.lessonKey).once(lesson => {
             this.lesson = lesson;
             this.activity = lesson.activities[params.activityKey];
+            let takenAnswer = this.takeAnswer();
             switch (this.activity.type) {
                 case "one-answer":
-                    this.showOneAnswer();
+                    this.answers = [takenAnswer];
                     break;
                 case "all-answers":
                     var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
@@ -37,6 +39,9 @@ export class ActivityViewer {
                         this.tries = this.activity.blinks[btoa(this.storage.email)].tries || {};
                     this.nextAnswer(0);
                     break;
+                case "stand-still":
+                    this.nextAnswer(0, true);
+                    break;
             }
         });
     }
@@ -46,12 +51,17 @@ export class ActivityViewer {
         this.lessonService.blink(this.lesson.key, this.activity.key, this.tries);
         this.answers = [this.activity.answers[this.currentAnswerKey]];
         setTimeout(() => $(".answer-overlay").focus());
-        setTimeout(() => {
+        this.blinkTimeout = setTimeout(() => {
             this.answers = [];
         }, (this.activity.answers[this.currentAnswerKey].value.length * this.activity.speedRatio) + 100);
     }
 
-    nextAnswer(step: number) {
+    cancelBlink() {
+        this.answers = [];
+        if (this.blinkTimeout) clearTimeout(this.blinkTimeout);
+    }
+
+    nextAnswer(step: number, display: boolean = false) {
         let answerKeys = Object.keys(this.activity.answers);
         this.currentAnswerIndex += step;
 
@@ -61,17 +71,21 @@ export class ActivityViewer {
 
         this.currentAnswerKey = answerKeys[this.currentAnswerIndex];
         this.tries[this.currentAnswerKey] = this.tries[this.currentAnswerKey] || 0;
+
+        if (display) {
+            this.answers = [this.activity.answers[this.currentAnswerKey]];
+        }
     }
 
-    showOneAnswer() {
-        let answer = _(this.activity.answers)
+    takeAnswer(): IAnswer {
+        let takenAnswers: IAnswer[] = _(this.activity.answers)
             .filter((answer: IAnswer) =>
                 _.some(answer.taken, (user: IUserInfo) => user.email === this.storage.email)
             )
             .map((answer: IAnswer) => answer)
             .value();
 
-        if (!answer.length) {
+        if (!takenAnswers.length) {
             let minSelected = _.min(_.map(this.activity.answers, (ans: IAnswer, key) => {
                 return Object.keys(ans.taken || {}).length;
             }));
@@ -82,11 +96,11 @@ export class ActivityViewer {
                 .value();
 
             let choice = this.getRandom(0, answers.length);
-            let answer = answers[choice];
-            this.answers = [answer];
+            let answer: IAnswer = answers[choice];
             this.lessonService.takeAnswer(this.lesson.key, this.activity.key, answer.key);
+            return answer;
         } else {
-            this.answers = [answer[0]];
+            return takenAnswers[0];
         }
     }
 
