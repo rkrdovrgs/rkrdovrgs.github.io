@@ -9,41 +9,54 @@ import { Storage } from "helpers/storage";
 export class ActivityViewer {
     lesson: ILesson;
     activity: IActivity;
-    answers: IAnswer[] = [];
-    currentAnswerIndex: number = 0;
-    currentAnswerKey: string = "";
-    tries: { [answerKey: string]: number } = {};
+    answers: IAnswer[];
+    currentAnswerIndex: number;
+    currentAnswerKey: string;
+    tries: { [answerKey: string]: number };
     blinkTimeout: NodeJS.Timer;
+    detachActivity: IDetachListener;
 
 
     constructor(private lessonService: LessonsService, private router: Router, private storage: Storage) { }
 
     activate(params: { lessonKey: string, activityKey: string }) {
-        this.lessonService.getLesson(params.lessonKey).once(lesson => {
-            this.lesson = lesson;
-            this.activity = lesson.activities[params.activityKey];
-            let takenAnswer = this.takeAnswer();
-            switch (this.activity.type) {
-                case "one-answer":
-                    this.answers = [takenAnswer];
-                    break;
-                case "all-answers":
-                    var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
-                    this.answers = randomSort.map(r => {
-                        var answerKey = Object.keys(this.activity.answers)[r];
-                        return this.activity.answers[answerKey];
-                    });
-                    break;
-                case "blink":
-                    if (this.activity.blinks && this.activity.blinks[btoa(this.storage.email)])
-                        this.tries = this.activity.blinks[btoa(this.storage.email)].tries || {};
-                    this.nextAnswer(0);
-                    break;
-                case "stand-still":
-                    this.nextAnswer(0, true);
-                    break;
-            }
+        this.detachActivity = this.lessonService.subscribeToActivity(params.lessonKey, params.activityKey).on(() => {
+            this.lessonService.getLesson(params.lessonKey).once(lesson => {
+                this.answers = [];
+                this.currentAnswerIndex = 0;
+                this.currentAnswerKey = "";
+                this.tries = {};
+
+                this.lesson = lesson;
+                this.activity = lesson.activities[params.activityKey];
+
+                let takenAnswer = this.takeAnswer();
+                switch (this.activity.type) {
+                    case "one-answer":
+                        this.answers = [takenAnswer];
+                        break;
+                    case "all-answers":
+                        var randomSort = this.getUniqueRandom(Object.keys(this.activity.answers).length);
+                        this.answers = randomSort.map(r => {
+                            var answerKey = Object.keys(this.activity.answers)[r];
+                            return this.activity.answers[answerKey];
+                        });
+                        break;
+                    case "blink":
+                        if (this.activity.blinks && this.activity.blinks[btoa(this.storage.email)])
+                            this.tries = this.activity.blinks[btoa(this.storage.email)].tries || {};
+                        this.nextAnswer(0);
+                        break;
+                    case "stand-still":
+                        this.nextAnswer(0, true);
+                        break;
+                }
+            });
         });
+    }
+
+    deactivate() {
+        this.detachActivity();
     }
 
     blinkAnswer() {

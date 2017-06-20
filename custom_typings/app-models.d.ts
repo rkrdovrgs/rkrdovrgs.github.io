@@ -18,6 +18,7 @@ interface IActivity {
     hideComments: boolean;
     url: string;
     view: string;
+    lastUpdated: string;
     answers: {
         [answerKey: string]: IAnswer
     }

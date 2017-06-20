@@ -21,7 +21,7 @@ export class Hljs {
 
   codeChanged() {
     if (this.renderTimeoutId) clearTimeout(this.renderTimeoutId);
-    this.renderTimeoutId = setTimeout(this.render.bind(this), 750);
+    this.renderTimeoutId = setTimeout(this.render.bind(this), 250);
   }
 
   hideCodeChanged() {

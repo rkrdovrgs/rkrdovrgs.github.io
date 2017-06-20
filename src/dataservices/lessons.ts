@@ -3,6 +3,7 @@ import { inject } from "aurelia-dependency-injection";
 import { Mapper } from "./mapper";
 import { Storage } from "helpers/storage";
 import * as firebase from "firebase";
+import * as moment from "moment";
 
 @inject(BaseApiService, Mapper, Storage)
 export class LessonsService {
@@ -27,6 +28,7 @@ export class LessonsService {
     }
 
     saveActivity(lessonKey: string, activity: IActivity): Promise<IActivity> {
+        activity.lastUpdated = moment().toISOString();
         return new Promise(resolve => {
             if (!activity.key) {
                 delete activity.key;
@@ -42,6 +44,21 @@ export class LessonsService {
                     .then(() => resolve(activity));
             }
         });
+    }
+
+    subscribeToActivity(lessonKey: string, activityKey: string) {
+        let activityLastUpdatedRef = this.lessonsRef.child(lessonKey)
+            .child("activities")
+            .child(activityKey)
+            .child("lastUpdated");
+        return {
+            on: resolve => {
+                let activityCallback = activityLastUpdatedRef.on("value", resolve);
+                return () => {
+                    activityLastUpdatedRef.off("value", activityCallback);
+                };
+            }
+        };
     }
 
     addAnswer(lessonKey: string, activityKey: string): Promise<IAnswer> {

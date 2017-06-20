@@ -8,6 +8,7 @@ export class LessonActivityDetails {
     activity: IActivity;
     answers: IAnswer[] = [];
     answersTakenUrl: string;
+    lastUpdated: string;
 
     constructor(private lessonService: LessonsService, private router: Router) { }
 
@@ -54,9 +55,10 @@ export class LessonActivityDetails {
         });
 
         return this.lessonService.saveActivity(this.lesson.key, this.activity)
-            .then(activity =>
-                this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key })
-            );
+            .then(activity => {
+                this.lastUpdated = `Last updated at ${activity.lastUpdated}`;
+                this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key });
+            });
     }
 
 }
