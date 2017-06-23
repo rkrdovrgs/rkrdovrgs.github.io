@@ -58,21 +58,33 @@
         <div if.bind="!!activity.key">
             <hr>
             <h2>Answers</h2>
-            <hr if.bind="answers.length">
             <ul>
-                <li class="row" repeat.for="answer of answers">
+                <li class="row">
                     <div class="col-xs-12">
-                        <textarea class="form-control" rows="3" value.bind="answer.value"></textarea>
+                        <hr>
+                        <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
+                        <hr>
                     </div>
-                    <div class="col-xs-12">
-                        <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments" hide-code.bind="activity.hideCode"></hljs>
+                </li>
+                <li class="row" repeat.for="answer of answers">
+                    <div class="row code-panel">
+                        <div class="col-xs-6">
+                            <textarea class="form-control" value.bind="answer.value"></textarea>
+                        </div>
+                        <div class="col-xs-6">
+                            <hljs code.bind="answer.value"></hljs>
+                        </div>
                     </div>
                     <div class="col-xs-12">
                         <button click.trigger="removeAnswer(answer.key, $index)" class="btn btn-default"><i class="fa fa-trash"></i> Remove answer</button>
                     </div>
+                    <div class="col-xs-12">
+                        <hr>
+                        <button click.trigger="addAnswer($index)" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
+                        <hr>
+                    </div>
                 </li>
             </ul>
-            <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
             <button if.bind="answers.length" type="submit" click.trigger="saveActivity()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
         </div>
     </form>

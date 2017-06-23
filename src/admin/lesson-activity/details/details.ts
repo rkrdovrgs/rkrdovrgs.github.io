@@ -1,6 +1,7 @@
 import { inject } from "aurelia-framework";
 import { LessonsService } from "dataservices/lessons";
 import { Router } from "aurelia-router";
+import * as _ from "lodash";
 
 @inject(LessonsService, Router)
 export class LessonActivityDetails {
@@ -27,12 +28,16 @@ export class LessonActivityDetails {
         });
     }
 
-    addAnswer() {
+    addAnswer(answerIndex?: number) {
         this.lessonService.addAnswer(this.lesson.key, this.activity.key)
             .then(answer => {
                 this.activity.answers = this.activity.answers || {};
                 this.activity.answers[answer.key] = answer;
-                this.answers.push(this.activity.answers[answer.key]);
+                if (answerIndex >= 0) {
+                    this.answers.splice(answerIndex + 1, 0, this.activity.answers[answer.key]);
+                } else {
+                    this.answers.unshift(this.activity.answers[answer.key]);
+                }
             });
     }
 
@@ -50,8 +55,8 @@ export class LessonActivityDetails {
         this.activity.tries = this.activity.tries || 3;
         this.activity.hideComments = this.activity.hideComments || false;
         this.activity.hideCode = this.activity.hideCode || false;
-        this.answers.forEach(answer => {
-            this.activity.answers[answer.key] = answer;
+        _.sortBy(this.answers, a => a.key).forEach((answer, answerIndex) => {
+            this.activity.answers[answer.key] = this.answers[answerIndex];
         });
 
         return this.lessonService.saveActivity(this.lesson.key, this.activity)
