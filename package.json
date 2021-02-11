@@ -2,9 +2,9 @@
   "name": "public",
   "description": "An Aurelia client application.",
   "version": "0.1.0",
-  "repository": {
-    "type": "???",
-    "url": "???"
+  "scripts": {
+    "dev": "au run",
+    "prod": "au build --env prod"
   },
   "license": "MIT",
   "dependencies": {
@@ -38,7 +38,7 @@
     "connect-history-api-fallback": "^1.2.0",
     "del": "^2.2.2",
     "event-stream": "^3.3.3",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "^4.0.0",
     "gulp-changed-in-place": "^2.0.3",
     "gulp-flatten": "^0.3.1",
     "gulp-less": "^3.1.0",
