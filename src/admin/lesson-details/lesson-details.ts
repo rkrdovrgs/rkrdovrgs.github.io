@@ -32,6 +32,7 @@ export class LessonDetails {
     }
 
     saveLesson() {
+        this.lesson.ssViewerUrl = this.lesson.ssViewerUrl || "";
         this.lessonService.saveLesson(this.lesson)
             .then(lesson => {
                 this.router.navigateToRoute("lesson-details", { key: lesson.key });

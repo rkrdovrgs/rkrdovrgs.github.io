@@ -3,6 +3,7 @@
     day: number;
     key: string;
     url: string;
+    ssViewerUrl: string;
     activities: {
         [activityKey: string]: IActivity
     }
@@ -19,7 +20,6 @@ interface IActivity {
     hideComments: boolean;
     disable: boolean;
     lang: string;
-    ssViewerUrl: string;
     url: string;
     view: string;
     lastUpdated: string;

@@ -14,6 +14,10 @@
             <label>Day</label>
             <input type="text" class="form-control" placeholder="Day" value.bind="lesson.day">
         </div>
+        <div class="form-group">
+            <label>Screen Share Viewer URL</label>
+            <input type="text" class="form-control" placeholder="Viewer URL" value.bind="lesson.ssViewerUrl">
+        </div>
         <div if.bind="!!lesson.key">
             <hr>
             <h2>Activities</h2>

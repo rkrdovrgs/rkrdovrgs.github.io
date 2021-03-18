@@ -27,20 +27,27 @@ export class LessonsService {
         });
     }
 
-    saveActivity(lessonKey: string, activity: IActivity): Promise<IActivity> {
+    saveActivity(lessonKey: string, activity: IActivity, ssViewerUrl: string): Promise<IActivity> {
         activity.lastUpdated = moment().toISOString();
         return new Promise(resolve => {
+            const lessonRef = this.lessonsRef.child(lessonKey);
+            const lessonUpdateReq = lessonRef.update({ ssViewerUrl });
+            
             if (!activity.key) {
                 delete activity.key;
-                let activityRef = this.lessonsRef.child(lessonKey)
+                const activityRef = lessonRef
                     .child("activities")
                     .push(activity);
-                activityRef.then(() => resolve(this.mapper.getActivity(lessonKey, activityRef.key, activity)));
+
+                Promise.all([activityRef, lessonUpdateReq])
+                    .then(() => resolve(this.mapper.getActivity(lessonKey, activityRef.key, activity)));
             } else {
-                this.lessonsRef.child(lessonKey)
+                const activityReq = lessonRef
                     .child("activities")
                     .child(activity.key)
-                    .update(activity)
+                    .update(activity);
+
+                Promise.all([lessonUpdateReq, activityReq])
                     .then(() => resolve(activity));
             }
         });
