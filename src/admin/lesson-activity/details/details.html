@@ -1,15 +1,32 @@
 <template>
     <require from="admin/lesson-activity/details/details.css"></require>
     <a href="${lesson.url}" class="btn btn-default">Lesson ${lesson.week}.${lesson.day}</a>
-    <a if.bind="!!activity.key" href="${activity.view}" target="blank" class="btn btn-primary"><i class="fa fa-eye"></i> Preview Activity</a>
+    <a if.bind="!!activity.key" href="${activity.view}" target="blank" class="btn btn-primary"><i class="fa fa-eye"></i>
+        Preview Activity</a>
     <hr>
     <form>
         <h2>Activity <small>${lastUpdated}</small></h2>
-        <button type="submit" click.trigger="saveActivity()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+        <button type="submit" click.trigger="saveActivity()" class="btn btn-success"><i class="fa fa-save"></i>
+            Save</button>
         <hr>
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" class="form-control" placeholder="Name" value.bind="activity.name">
+        <div class="row">
+            <div class="form-group col-xs-8">
+                <label>Name</label>
+                <input type="text" class="form-control" placeholder="Name" value.bind="activity.name">
+            </div>
+            <div class="form-group col-xs-4">
+                <label>Lang</label>
+                <select class="form-control" value.bind="activity.lang">
+                    <option value="javascript">JavaScript</option>
+                    <option value="css">CSS</option>
+                    <option value="html">HTML</option>
+                    <option value="md">Markdown</option>
+                </select>
+            </div>
+            <div class="form-group col-xs-12">
+                <label>Screen Share Viewer URL</label>
+                <input type="text" class="form-control" placeholder="Viewer URL" value.bind="activity.ssViewerUrl">
+            </div>
         </div>
         <div class="form-group checkbox-list">
             <label>
@@ -20,23 +37,40 @@
                 <input type="checkbox" checked.bind="activity.hideCode">
                 Hide code?
             </label>
+            <label>
+                <input type="checkbox" checked.bind="activity.disable">
+                Disable?
+            </label>
         </div>
         <div class="form-group radiobutton-list">
+            <label>
+                <input type="radio" name="activity-type" value="all-answers" checked.bind="activity.type">
+                All answers
+            </label>
+            <label>
+                <input type="radio" name="activity-type" value="multiple-choice" checked.bind="activity.type">
+                Multiple choice
+            </label>
+            <label>
+                <input type="radio" name="activity-type" value="voting" checked.bind="activity.type">
+                Voting
+            </label>
             <label>
                 <input type="radio" name="activity-type" value="one-answer" checked.bind="activity.type">
                 One answer
             </label>
+
             <label>
-                <input type="radio" name="activity-type" value="all-answers" checked.bind="activity.type">                
-                All answers
-            </label>
-            <label>
-                <input type="radio" name="activity-type" value="blink" checked.bind="activity.type">                
+                <input type="radio" name="activity-type" value="blink" checked.bind="activity.type">
                 Blink
             </label>
             <label>
-                <input type="radio" name="activity-type" value="stand-still" checked.bind="activity.type">                
+                <input type="radio" name="activity-type" value="stand-still" checked.bind="activity.type">
                 Stand Still
+            </label>
+            <label>
+                <input type="radio" name="activity-type" value="code-along" checked.bind="activity.type">
+                Code Along
             </label>
         </div>
         <div class="form-group row" if.bind="activity.type === 'blink'">
@@ -47,6 +81,12 @@
             <div class="col-xs-6">
                 <label>Tries</label>
                 <input type="number" class="form-control" placeholder="Tries" value.bind="activity.tries">
+            </div>
+        </div>
+        <div class="form-group row" if.bind="activity.type === 'multiple-choice'">
+            <div class="col-xs-4">
+                <label>Choices</label>
+                <input type="number" class="form-control" placeholder="Choices" value.bind="activity.choices">
             </div>
         </div>
         <div class="form-group radiobutton-list" if.bind="answersTakenUrl">
@@ -62,30 +102,34 @@
                 <li class="row">
                     <div class="col-xs-12">
                         <hr>
-                        <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
+                        <button click.trigger="addAnswer()" class="btn btn-default"><i class="fa fa-plus"></i> Add
+                            answer</button>
                         <hr>
                     </div>
                 </li>
                 <li class="row" repeat.for="answer of answers">
                     <div class="row code-panel">
                         <div class="col-xs-6">
-                            <textarea class="form-control" value.bind="answer.value"></textarea>
+                            <textarea code-editor class="form-control" value.bind="answer.value"></textarea>
                         </div>
                         <div class="col-xs-6">
-                            <hljs code.bind="answer.value"></hljs>
+                            <hljs code.bind="answer.value" lang.bind="activity.lang"></hljs>
                         </div>
                     </div>
                     <div class="col-xs-12">
-                        <button click.trigger="removeAnswer(answer.key, $index)" class="btn btn-default"><i class="fa fa-trash"></i> Remove answer</button>
+                        <button click.trigger="removeAnswer(answer.key, $index)" class="btn btn-default"><i
+                                class="fa fa-trash"></i> Remove answer</button>
                     </div>
                     <div class="col-xs-12">
                         <hr>
-                        <button click.trigger="addAnswer($index)" class="btn btn-default"><i class="fa fa-plus"></i> Add answer</button>
+                        <button click.trigger="addAnswer($index)" class="btn btn-default"><i class="fa fa-plus"></i> Add
+                            answer</button>
                         <hr>
                     </div>
                 </li>
             </ul>
-            <button if.bind="answers.length" type="submit" click.trigger="saveActivity()" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+            <button if.bind="answers.length" type="submit" click.trigger="saveActivity()" class="btn btn-success"><i
+                    class="fa fa-save"></i> Save</button>
         </div>
     </form>
 </template>

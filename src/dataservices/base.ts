@@ -27,7 +27,7 @@ export class BaseApiService extends HttpClient {
     get<T>(url: string, params?: Object): Promise<T> {
         let request: any;
 
-        BaseApiService.pendingRequests.push(true);
+        //BaseApiService.pendingRequests.push(true);
         if (Object.keys(params || {}).length) {
             let searchParams = new URLSearchParams();
             _.forEach(params, (value, key) => {

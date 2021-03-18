@@ -1,0 +1,53 @@
+<template>
+    <require from="reading/reading.css"></require>
+
+    <div class="action-buttons">
+        <button click.delegate="mixAndMatch()"><i class="fa fa-play"></i>Mix & Match</button>
+        <button click.delegate="startReading()"><i class="fa fa-play"></i>Read</button>
+        <label><input type="checkbox" checked.bind="spell" />Spell?</label>
+    </div>
+
+    <input placeholder="Type word to add" value.bind="newWord" type="text" keyup.delegate="addWord($event)" />
+    <button click.delegate="addWord()">Add</button>
+    <button click.delegate="randomX()">Randomize</button>
+
+
+
+    <ul class="words">
+        <li repeat.for="w of words">
+            <button click.delegate="removeWord($index)" class="btn-link"><i class="fa fa-trash"></i></button>
+
+            <span click.delegate="toggleWord($index)" class="${w.skip ? 'skip-word' : ''}">
+                <i class="fa fa-${!w.skip ? 'check-' : ''}square-o"></i>
+                ${w.w}
+            </span>
+        </li>
+    </ul>
+
+
+
+    <div class="game-placeholder" if.bind="currentWord">
+        <div class="current-word">
+            <ul>
+                <li repeat.for="c of currentWord.split('')" class="${$index === cIndex ? 'active-char' : ''}">
+                    ${c}
+                </li>
+            </ul>
+            <img if.bind="currentImg" src="${currentImg}" style="height: 200px;" />
+        </div>
+    </div>
+
+
+    <div class="game-placeholder" if.bind="mixAndMatchSettings.options.length">
+        <div class="mix-and-match">
+            <button click.delegate="repeatMixAndMatch()"><i class="fa fa-play"></i> Repeat</button>
+            <hr />
+            <ul class="${mixAndMatchSettings.showingCorrectAnswer ? 'show-correct-match': ''}">
+                <li repeat.for="w of mixAndMatchSettings.options" click.delegate="verifyMixAndMatch($index)"
+                    class="${mixAndMatchSettings.showingCorrectAnswer && $index === mixAndMatchSettings.correctIndex ? 'correct-match' : ''}">
+                    ${w}
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>

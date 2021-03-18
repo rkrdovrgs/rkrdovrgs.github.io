@@ -75,8 +75,14 @@ export class LessonsService {
         });
     }
 
-    takeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<undefined> {
-        return new Promise(resolve => {
+    async takeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<void> {
+        const staffSnap = await firebase.database().ref("staff").once("value");
+        const staff = Object.values(staffSnap.val());
+        if (staff.some((s: string) => this.storage.email.includes(s))) {
+            return;
+        }
+
+        return await new Promise(resolve => {
             let answerRef = this.lessonsRef.child(lessonKey)
                 .child("activities")
                 .child(activityKey)
@@ -84,7 +90,7 @@ export class LessonsService {
                 .child(answerKey)
                 .child("taken")
                 .push(this.storage.getUserInfo());
-            answerRef.then(() => resolve(undefined));
+            answerRef.then(() => resolve());
         });
     }
 
@@ -157,5 +163,14 @@ export class LessonsService {
         });
     }
 
-
+    getAsignees(lessonKey: string, activityKey: string, answerKey: string, callback) {
+        return this.lessonsRef
+            .child(lessonKey)
+            .child("activities")
+            .child(activityKey)
+            .child("answers")
+            .child(answerKey)
+            .child("taken")
+            .on("value", callback);
+    }
 }

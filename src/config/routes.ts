@@ -49,5 +49,12 @@ export default [
         title: "Unauthorized",
         auth: false,
         name: Constants.UNAUTHORIZED_ROUTE_NAME
-    }
+    },
+    {
+        name: "reading",
+        route: ["reading"],
+        moduleId: "reading/reading",
+        title: "Reading",
+        auth: false
+    },
 ] as Array<IRoute>;

@@ -14,8 +14,12 @@ interface IActivity {
     type: string;
     speedRatio: number;
     tries: number;
+    choices: number;
     hideCode: boolean;
     hideComments: boolean;
+    disable: boolean;
+    lang: string;
+    ssViewerUrl: string;
     url: string;
     view: string;
     lastUpdated: string;

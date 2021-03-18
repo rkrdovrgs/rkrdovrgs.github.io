@@ -1,0 +1,18 @@
+<template>
+    <require from="activity-viewer/custom/code-along/code-along.css"></require>
+    <label>Answer: ${currentAnswerIndex + 1}</label>
+    <br>
+    <button class="btn btn-default" click.trigger="nextAnswer(-1, true)">Previous Hint</button>
+    <button class="btn btn-default" click.trigger="nextAnswer(1, true)">Next Hint</button>
+
+    <ul>
+        <li class="row" repeat.for="answer of answers">
+            <b>${$index + 1}.</b>
+            <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
+            <div show.bind="!answer.hidden" class="col-xs-12">
+                <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments"
+                    hide-code.bind="activity.hideCode"></hljs>
+            </div>
+        </li>
+    </ul>
+</template>

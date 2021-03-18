@@ -1,0 +1,22 @@
+<template>
+    <require from="activity-viewer/custom/voting/voting.css"></require>
+    <label>Answer: ${currentAnswerIndex + 1}</label>
+    <br>
+    <div if.bind="isAdmin">
+        <button click.delegate="nextAnswer(-1)">Prev</button>
+        <button click.delegate="nextAnswer(1)">Next</button>
+        <hr />
+    </div>
+
+    <ul>
+        <li class="row" repeat.for="answer of answers">
+            <b>${$index + 1}.</b>
+            <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
+
+            <div show.bind="!answer.hidden" class="col-xs-12">
+                <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments"
+                    hide-code.bind="activity.hideCode"></hljs>
+            </div>
+        </li>
+    </ul>
+</template>

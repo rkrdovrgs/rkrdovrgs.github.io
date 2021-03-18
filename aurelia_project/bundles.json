@@ -11,7 +11,10 @@
       "name": "vendor-bundle.js",
       "prepend": [
         "node_modules/bluebird/js/browser/bluebird.core.js",
-        "libs/require.js"
+        "libs/require.js",
+        "libs/hljs.js",
+        "libs/codemirror.js",
+        "libs/codemirror.javascript.js"
       ],
       "dependencies": [
         "aurelia-binding",

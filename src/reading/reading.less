@@ -1,0 +1,123 @@
+#reading {
+    .game-placeholder {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+
+        >div {
+            text-align: center;
+        }
+    }
+
+    .current-word {
+        ul {
+            font-size: 200px;
+            padding: 0;
+            margin: 0;
+
+            li {
+                display: inline-block;
+                font-weight: bold;
+
+                &.active-char {
+                    color: red;
+                    font-size: 1.2em;
+                }
+            }
+        }
+    }
+
+    .mix-and-match {
+        width: 100%;
+        ul {
+            font-size: 75px;
+            font-weight: bold;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+
+            li {
+                cursor: pointer;
+
+                &:active {
+                    background-color: #e1e1e1;
+                }
+            }
+
+            &.show-correct-match li {
+                text-decoration: line-through;
+                color: red;
+                font-size: 0.8em;
+
+                &.correct-match {
+                    text-decoration: none;
+                    color: green;
+                    font-size: 1.2em;
+                }
+            }
+        }
+
+
+    }
+
+    label input[type="checkbox"] {
+        margin-right: 5px;
+        margin-top: 0;
+        position: relative;
+        top: 2px;
+    }
+
+
+    .skip-word {
+        text-decoration: line-through;
+    }
+
+    .action-buttons {
+        margin-bottom: 20px;
+
+        button {
+            margin-right: 7px;
+
+            i {
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .btn-link {
+        color: #333;
+        opacity: 0.7;
+        height: 20px;
+        font-size: 13px;
+
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    ul.words {
+        padding-left: 0;
+        list-style: none;
+        margin-top: 20px;
+
+        li {
+            margin-bottom: 7px;
+
+            span {
+                cursor: pointer;
+                margin-left: 20px;
+
+                i {
+                    width: 13px;
+                }
+            }
+        }
+    }
+}

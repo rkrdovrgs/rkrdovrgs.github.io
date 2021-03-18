@@ -7,6 +7,7 @@ export class Hljs {
   @bindable code;
   @bindable hideCode = false;
   @bindable hideComments = false;
+  @bindable lang = "javascript";
   converter: showdown.Converter;
   codeContainer: Element;
   renderTimeoutId: number;
@@ -16,6 +17,7 @@ export class Hljs {
   }
 
   bind() {
+    this.lang = this.lang || "javascript";
     this.render();
   }
 
@@ -32,6 +34,11 @@ export class Hljs {
     this.render();
   }
 
+  langChanged(newVal: string) {
+    if (!newVal) return;
+    this.render();
+  }
+
   private render() {
     let value = this.code;
 
@@ -45,7 +52,7 @@ export class Hljs {
       value = lines.filter(l => l.trim().startsWith("//")).join("\n");
     }
 
-    let codeHtml = this.converter.makeHtml("```javascript\n" + value + "\n```");
+    let codeHtml = this.converter.makeHtml("```" + this.lang + "\n" + value + "\n```");
     $(this.codeContainer).html(codeHtml);
     $(this.codeContainer).find("pre code").each((i, block) => {
       hljs.highlightBlock(block);

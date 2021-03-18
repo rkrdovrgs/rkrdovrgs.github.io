@@ -1,0 +1,24 @@
+<template>
+    <label if.bind="pseudoAsignees.length">Assigned to:</label>
+    <ul>
+        <li repeat.for="t of pseudoAsignees">${t}</li>
+    </ul>
+
+    <label>What is this pseudo class used for?</label>
+    <textarea style=" width: 100%;" rows="3" value.bind="pseudoClassAnswer.description"
+        keyup.delegate="updatePseudoClassAnswer() & debounce:1500"></textarea>
+
+    <hr />
+    <hljs code.bind="answers[0].value.substring(0, answers[0].value.indexOf('\n'))"></hljs>
+    <label>Enter CSS rule for your target:</label>
+    <input type="text" style="width: 100%;" value.bind="pseudoClassAnswer.selector"
+        keyup.delegate="updatePseudoClassAnswer() & debounce:1500" />
+
+    <hr />
+    <hljs if.bind="pseudoClassAnswer.cssRule" code.bind="pseudoClassAnswer.cssRule"></hljs>
+
+    <template if.bind="pseudoClassAnswer.description && pseudoClassAnswer.selector">
+        <hr />
+        <hljs code.bind="pseudoClassCss"></hljs>
+    </template>
+</template>

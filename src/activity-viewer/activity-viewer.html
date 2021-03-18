@@ -1,29 +1,39 @@
 <template>
     <require from="activity-viewer/activity-viewer.css"></require>
-    <label>Lesson ${lesson.week}.${lesson.day} - <small>${activity.name}</small></label>
-    <br>
-    <div if.bind="activity.type === 'blink'">
-        <label>Answer: ${currentAnswerIndex + 1}</label>
-        <label>Tries left: ${activity.tries - tries[currentAnswerKey]}</label>
+    <template if.bind="!activity.disable">
+        <label>Lesson ${lesson.week}.${lesson.day} - <small>${activity.name}</small></label>
         <br>
-        <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(-1)">Previous Hint</button>
-        <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(1)">Next Hint</button>
-        <button class="btn btn-primary" if.bind="tries[currentAnswerKey] < activity.tries && answers.length === 0" click.trigger="blinkAnswer()">${tries[currentAnswerKey] ? 'Repeat' : 'Show'} Hint</button>
-    </div>
-    <div if.bind="activity.type === 'stand-still'">
-        <label>Answer: ${currentAnswerIndex + 1}</label>
-        <br>
-        <button class="btn btn-default" click.trigger="nextAnswer(-1, true)">Previous Hint</button>
-        <button class="btn btn-default" click.trigger="nextAnswer(1, true)">Next Hint</button>
-    </div>
-    <ul>
-        <li class="row" repeat.for="answer of answers">
-            <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
-            <div show.bind="!answer.hidden" class="col-xs-12">
-                <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments" hide-code.bind="activity.hideCode"></hljs>
-            </div>
-        </li>
-    </ul>
-    <textarea class="answer-overlay" click.trigger="cancelBlink()" if.bind="answers.length > 0 && activity.type === 'blink'">
-    </textarea>
+        <div if.bind="activity.type === 'blink'">
+            <label>Answer: ${currentAnswerIndex + 1}</label>
+            <label>Tries left: ${activity.tries - tries[currentAnswerKey]}</label>
+            <br>
+            <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(-1)">Previous
+                Hint</button>
+            <button class="btn btn-default" if.bind="answers.length === 0" click.trigger="nextAnswer(1)">Next
+                Hint</button>
+            <button class="btn btn-primary" if.bind="tries[currentAnswerKey] < activity.tries && answers.length === 0"
+                click.trigger="blinkAnswer()">${tries[currentAnswerKey] ? 'Repeat' : 'Show'} Hint</button>
+        </div>
+        <div if.bind="activity.type === 'stand-still'">
+            <label>Answer: ${currentAnswerIndex + 1}</label>
+            <br>
+            <button class="btn btn-default" click.trigger="nextAnswer(-1, true)">Previous Hint</button>
+            <button class="btn btn-default" click.trigger="nextAnswer(1, true)">Next Hint</button>
+        </div>
+        <ul>
+            <li class="row" repeat.for="answer of answers">
+                <i class="fa fa-${answer.hidden ? 'plus' : 'minus'}" click.trigger="answer.hidden = !answer.hidden"></i>
+                <div show.bind="!answer.hidden" class="col-xs-12">
+                    <hljs code.bind="answer.value" hide-comments.bind="activity.hideComments" lang.bind="activity.lang"
+                        hide-code.bind="activity.hideCode"></hljs>
+                </div>
+            </li>
+        </ul>
+        <textarea class="answer-overlay" click.trigger="cancelBlink()"
+            if.bind="answers.length > 0 && activity.type === 'blink'">
+        </textarea>
+
+        <compose if.bind="customViewer" view-model.bind="customViewer" class="${activity.type}" />
+    </template>
+    <iframe width="100%" height="800px" if.bind="activity.ssViewerUrl" src="${activity.ssViewerUrl}"></iframe>
 </template>

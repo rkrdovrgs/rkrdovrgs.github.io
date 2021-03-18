@@ -7,6 +7,7 @@ import { Storage } from "helpers/storage";
 
 @inject(LessonsService, Router, Storage)
 export class ActivityViewer {
+    viewerUrl = "https://api.screenleap.com/v2/viewer/116959567?accountid=rkrdovrgs";
     lesson: ILesson;
     activity: IActivity;
     answers: IAnswer[];
@@ -14,6 +15,7 @@ export class ActivityViewer {
     currentAnswerKey: string;
     tries: { [answerKey: string]: number };
     blinkTimeout: NodeJS.Timer;
+    customViewer: string;
     detachActivity: IDetachListener;
 
 
@@ -26,10 +28,17 @@ export class ActivityViewer {
                 this.currentAnswerIndex = 0;
                 this.currentAnswerKey = "";
                 this.tries = {};
+                this.customViewer = "";
 
                 this.lesson = lesson;
                 this.activity = lesson.activities[params.activityKey];
 
+                if (this.activity.disable) {
+                    return;
+                }
+
+                // even thought this variable is only used in one of the cases
+                // still want to assign an answer to a student for participation purposes
                 let takenAnswer = this.takeAnswer();
                 switch (this.activity.type) {
                     case "one-answer":
@@ -49,6 +58,9 @@ export class ActivityViewer {
                         break;
                     case "stand-still":
                         this.nextAnswer(0, true);
+                        break;
+                    default:
+                        this.customViewer = `activity-viewer/custom/${this.activity.type}/${this.activity.type}`;
                         break;
                 }
             });
@@ -110,7 +122,9 @@ export class ActivityViewer {
 
             let choice = this.getRandom(0, answers.length);
             let answer: IAnswer = answers[choice];
+
             this.lessonService.takeAnswer(this.lesson.key, this.activity.key, answer.key);
+
             return answer;
         } else {
             return takenAnswers[0];

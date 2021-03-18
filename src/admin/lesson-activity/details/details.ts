@@ -55,6 +55,10 @@ export class LessonActivityDetails {
         this.activity.tries = this.activity.tries || 3;
         this.activity.hideComments = this.activity.hideComments || false;
         this.activity.hideCode = this.activity.hideCode || false;
+        this.activity.disable = this.activity.disable || false;
+        this.activity.lang = this.activity.lang || "javascript";
+        this.activity.ssViewerUrl = this.activity.ssViewerUrl || "";
+        this.activity.choices = this.activity.choices || 3;
         _.sortBy(this.answers, a => a.key).forEach((answer, answerIndex) => {
             this.activity.answers[answer.key] = this.answers[answerIndex];
         });
@@ -62,8 +66,8 @@ export class LessonActivityDetails {
         return this.lessonService.saveActivity(this.lesson.key, this.activity)
             .then(activity => {
                 this.lastUpdated = `Last updated at ${activity.lastUpdated}`;
+                this.activity.key = activity.key;
                 this.router.navigateToRoute("lesson-activity-details", { lessonKey: this.lesson.key, activityKey: activity.key });
             });
     }
-
 }

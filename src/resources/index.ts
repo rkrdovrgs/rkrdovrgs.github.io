@@ -10,6 +10,9 @@ export function configure(config: FrameworkConfiguration) {
         //elements
         "./elements/section-async/section-async",
         "./elements/hljs/hljs",
+
+        //attributes
+        "./attributes/code-editor",
     ];
 
     config.globalResources(resources);
