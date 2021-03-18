@@ -10,6 +10,6 @@ export default gulp.series(
 );
 
 function clean() {
-    return del([project.platform.output, 'dist']);
+    return del([project.platform.output, 'dist', /*"node_modules/@types/node/ts3.6/assert.d.ts"*/]);
 }
 

@@ -14,7 +14,7 @@ export class ActivityViewer {
     currentAnswerIndex: number;
     currentAnswerKey: string;
     tries: { [answerKey: string]: number };
-    blinkTimeout: NodeJS.Timer;
+    blinkTimeout: number;
     customViewer: string;
     detachActivity: IDetachListener;
 
@@ -76,7 +76,7 @@ export class ActivityViewer {
         this.lessonService.blink(this.lesson.key, this.activity.key, this.tries);
         this.answers = [this.activity.answers[this.currentAnswerKey]];
         setTimeout(() => $(".answer-overlay").focus());
-        this.blinkTimeout = setTimeout(() => {
+        this.blinkTimeout = window.setTimeout(() => {
             this.answers = [];
         }, (this.activity.answers[this.currentAnswerKey].value.length * this.activity.speedRatio) + 100);
     }

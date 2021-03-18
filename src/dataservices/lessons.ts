@@ -124,14 +124,14 @@ export class LessonsService {
         });
     }
 
-    removeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<undefined> {
+    removeAnswer(lessonKey: string, activityKey: string, answerKey: string): Promise<void> {
         return new Promise(resolve => {
             this.lessonsRef.child(lessonKey)
                 .child("activities")
                 .child(activityKey)
                 .child("answers")
                 .child(answerKey)
-                .remove(resolve);
+                .remove(() => resolve());
         });
     }
 

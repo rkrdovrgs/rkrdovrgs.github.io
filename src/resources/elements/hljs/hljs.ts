@@ -23,7 +23,7 @@ export class Hljs {
 
   codeChanged() {
     if (this.renderTimeoutId) clearTimeout(this.renderTimeoutId);
-    this.renderTimeoutId = setTimeout(this.render.bind(this), 200);
+    this.renderTimeoutId = window.setTimeout(this.render.bind(this), 200);
   }
 
   hideCodeChanged() {
@@ -55,7 +55,7 @@ export class Hljs {
     let codeHtml = this.converter.makeHtml("```" + this.lang + "\n" + value + "\n```");
     $(this.codeContainer).html(codeHtml);
     $(this.codeContainer).find("pre code").each((i, block) => {
-      hljs.highlightBlock(block);
+      window.hljs.highlightBlock(block);
     });
   }
 }

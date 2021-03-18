@@ -12,7 +12,7 @@
     "displayName": "TypeScript",
     "fileExtension": ".ts",
     "dtsSource": [
-      "./node_modules/@types/**/*.d.ts",
+      "./node_modules/@types",
       "./custom_typings/**/*.d.ts"
     ],
     "source": "src/**/*.ts"
@@ -88,7 +88,7 @@
       ]
     },
     "options": {
-      "minify": "stage & prod",
+      "minify": "stage",
       "sourcemaps": "dev & stage",
       "rev": "prod"
     }
