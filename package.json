@@ -18,7 +18,7 @@
     "aurelia-fetch-client": "^1.0.0",
     "bluebird": "^3.4.1",
     "bootstrap": "^3.3.7",
-    "firebase": "^3.7.8",
+    "firebase": "^10.9.0",
     "font-awesome": "^4.7.0",
     "invariant": "^2.2.1",
     "jquery": "^3.1.1",
